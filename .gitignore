@@ -1,0 +1,11 @@
+# venv module (virtual environment) #
+#####################################
+.venv/
+
+# OS generated files #
+######################
+.DS_Store
+
+# Python cache #
+################
+__pycache__/
