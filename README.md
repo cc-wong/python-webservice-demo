@@ -13,9 +13,14 @@ Includes:
   - Reference: <https://pypi.org/project/swagger-ui-py/>
 
 ## Usage
-### Startup
 
-The app must be up and running in order for web service calls and the link to the API documentation to work.
+**IMPORTANT: The app must be up and running in order for these links to work.**
+
+Root URL: <http://localhost:5000/>
+
+For the list of endpoints, see the Swagger UI API documentation at <http://localhost:5000/api/doc>.
+
+### Startup
 
 #### Run locally at the terminal
 1. Go to the root directory of this project in the terminal.
@@ -25,14 +30,19 @@ The app must be up and running in order for web service calls and the link to th
 
 #### Deploy to Docker
 
-You should have Docker Desktop installed at your machine.
+**WARNING: This app was designed to be deployed to a machine with Docker Desktop installed. It has not been tested on cloud Docker services and thus is not guaranteed to work there.**
 
-Command: `docker compose up --build -d`
+This app may be deployed by either of the following methods:
+1. Local deployment at the terminal
+   - Command: `docker compose up --build -d`
+2. Search for image `ccwong4869/python-webservice-demo` and pull
+   - Public view at Docker Hub: <https://hub.docker.com/r/ccwong4869/python-webservice-demo>
+   - Note: This image is for the latest version of the `master` branch.
 
 Reference: <https://docs.docker.com/language/python/containerize/>
 
-### To call the services
-Base URL: <http://localhost:5000/>
+### Testing the deployment with Kubernetes (Docker Desktop)
 
-### Swagger UI documentation
-<http://localhost:5000/api/doc>
+For commands at the terminal, see: <https://docs.docker.com/language/python/deploy/>
+
+Curl command for verification: `curl http://localhost:30001/`
