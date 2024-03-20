@@ -1,0 +1,52 @@
+openapi: 3.0.0
+info:
+  title: Python Web Service Demo
+  description: A simple demonstration web service app with Python and Flask.
+  version: 0.1.0
+paths:
+  /:
+    get:
+      description: Prints a simple "Hello World" message.
+      responses:
+        200:
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+                example: <h1>Hello World!</h1>
+  /{name}:
+    get:
+      description: Prints a personalized greeting with the name provided by <name>.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: The name to be used for the greeting.
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Hello, Lulu!
+  /json:
+    get:
+      description: Returns a test JSON response.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Chan Tai Man
+                  date:
+                    type: string
+                    example: Wed, 20 Mar 2024 17:17:26 GMT
