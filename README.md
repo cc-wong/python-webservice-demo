@@ -1,7 +1,7 @@
 # Python Web Service Demo
 A simple demonstration web service app with Python and Flask.
 
-## Pre-requisite
+## Pre-requisite(s)
 * Flask is installed.
   - For instructions, please refer to [the installation instructions at Flask's homepage](https://flask.palletsprojects.com/en/3.0.x/installation/#install-flask).
 
