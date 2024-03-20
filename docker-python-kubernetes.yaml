@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-python-ws-demo
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: flask
+  template:
+    metadata:
+      labels:
+        service: flask
+    spec:
+      containers:
+       - name: flask-service
+         image: ccwong4869/python-webservice-demo
+         imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    service: flask
+  ports:
+  - port: 5000
+    targetPort: 5000
+    nodePort: 30001
