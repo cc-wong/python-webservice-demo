@@ -1,7 +1,9 @@
 # Python Web Service Demo
 A simple demonstration web service app with Python and Flask.
 
-Includes a Swagger UI API documentation.
+Includes:
+1. API documentation by Swagger UI
+2. Configuration files for deployment to Docker
 
 ## Pre-requisites
 * Flask
@@ -11,12 +13,23 @@ Includes a Swagger UI API documentation.
   - Reference: <https://pypi.org/project/swagger-ui-py/>
 
 ## Usage
-### To start the app
-Use one of the following commands:
+### Startup
+
+The app must be up and running in order for web service calls and the link to the API documentation to work.
+
+#### Run locally at the terminal
+1. Go to the root directory of this project in the terminal.
+2. Run with one of the following commands:
 * `python3 -m flask --app App.py run`
 * `flask --app App.py run`
 
-The app must be started before opening the links in the sections below.
+#### Deploy to Docker
+
+You should have Docker Desktop installed at your machine.
+
+Command: `docker compose up --build -d`
+
+Reference: <https://docs.docker.com/language/python/containerize/>
 
 ### To call the services
 Base URL: <http://localhost:5000/>
