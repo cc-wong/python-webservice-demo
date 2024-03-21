@@ -47,6 +47,14 @@ paths:
                   name:
                     type: string
                     example: Chan Tai Man
-                  date:
-                    type: string
-                    example: Wed, 20 Mar 2024 17:17:26 GMT
+                  is_alive:
+                    type: boolean
+                    example: true
+                  age:
+                    type: integer
+                    example: 56
+                  work_days:
+                    type: array
+                    items:
+                      type: string
+                    example: [ Monday, Tuesday, Wednesday ]

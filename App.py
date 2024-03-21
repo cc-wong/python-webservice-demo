@@ -19,7 +19,15 @@ def personal_greeting(name):
 def get_json_data():
     return {
         "name" : "Chan Tai Man",
-        "date" : datetime.datetime.today()
+        "is_alive" : True,
+        "age" : 56,
+        "work_days" : [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+        ]
     }
 
 if __name__ == "__main__":

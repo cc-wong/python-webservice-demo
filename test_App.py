@@ -1,5 +1,4 @@
 import unittest
-from flask import current_app
 from flaskapp import create_app
 from App import application
 import json
@@ -42,4 +41,8 @@ class TestWebApp(unittest.TestCase):
 
         data = json.loads(response.get_data())
         assert data["name"] == "Chan Tai Man"
-        assert data["date"] is not None
+        assert data["is_alive"] is True
+        assert data["age"] == 56
+
+        work_days_expected = [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        assert data["work_days"] == work_days_expected
