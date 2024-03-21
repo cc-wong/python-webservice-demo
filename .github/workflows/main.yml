@@ -28,7 +28,7 @@ jobs:
       -
         name: Build and push
         env:
-          TAG_NAME: test
+          TAG_NAME: ${{ github.ref_name == 'master' && 'latest' || github.ref_name }}
         uses: docker/build-push-action@v5
         with:
           context: .
