@@ -7,7 +7,7 @@ on:
       - enhance_webapp
 
 jobs:
-  build:
+  run-unittest-and-push-to-docker:
     runs-on: ubuntu-latest
     steps:
       -
@@ -21,13 +21,9 @@ jobs:
       -
         name: Install dependencies
         run: |
-          pwd
-          ls -l
           python -m pip install --upgrade pip
-          pip install pytest
           python -m pip install -r requirements.txt
-#          pip install -r requirements.txt
-#          pip install -e .
+          pip install pytest
       -
         name: Run unit tests
         run: python -m pytest
@@ -46,6 +42,7 @@ jobs:
       -
         name: Build and push
         env:
+          # Tag name == Branch name
           TAG_NAME: ${{ github.ref_name }}
         uses: docker/build-push-action@v5
         with:
