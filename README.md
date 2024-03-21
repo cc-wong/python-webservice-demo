@@ -35,9 +35,8 @@ For the list of endpoints, see the Swagger UI API documentation at <http://local
 This app may be deployed by either of the following methods:
 1. Local deployment at the terminal
    - Command: `docker compose up --build -d`
-2. Search for image `ccwong4869/python-webservice-demo` and pull
+2. Search for image `ccwong4869/python-webservice-demo`, select the tag name that matches the branch you wish to use, and click Pull or Run.
    - Public view at Docker Hub: <https://hub.docker.com/r/ccwong4869/python-webservice-demo>
-   - Note: This image is for the latest version of the `master` branch.
 
 Reference: <https://docs.docker.com/language/python/containerize/>
 
