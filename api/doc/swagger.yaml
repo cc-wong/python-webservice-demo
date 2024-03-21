@@ -58,3 +58,36 @@ paths:
                     items:
                       type: string
                     example: [ Monday, Tuesday, Wednesday ]
+  /timestwo:
+    post:
+      description: Multiplies a given number by 2.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                num:
+                  type: integer
+                  example: 3
+              required:
+                - num
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  num:
+                    type: integer
+                    example: 3
+                  result:
+                    type: integer
+                    example: 6
+        400:
+          description: |
+            Bad request. "num" must exist in the request parameters and its value must be an integer. \
+            The response body will be the error message.

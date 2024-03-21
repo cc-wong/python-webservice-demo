@@ -46,3 +46,24 @@ class TestWebApp(unittest.TestCase):
 
         work_days_expected = [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
         assert data["work_days"] == work_days_expected
+    
+    # Tests endpoint: /timestwo; happy path
+    def test_multiply_by_two_normal(self):
+        response = self.client.post('/timestwo', data={"num" : 3})
+        assert response.status_code == 200
+
+        data = json.loads(response.get_data())
+        assert data["num"] == 3
+        assert data["result"] == 6
+
+    # Tests endpoint: /timestwo; request parameter "num" is not an integer
+    def test_multiply_by_two_noninteger_param(self):
+        response = self.client.post('/timestwo', data={"num" : "not-a-number"})
+        assert response.status_code == 400
+        assert response.data.decode('utf-8') == "'num' must be an integer."
+
+    # Tests endpoint: /timestwo; request parameter "num" does not exist
+    def test_multiply_by_two_no_request_param(self):
+        response = self.client.post('/timestwo', data={})
+        assert response.status_code == 400
+        assert response.data.decode('utf-8') == "'num' not present in request parameters."
