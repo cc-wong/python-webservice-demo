@@ -15,18 +15,24 @@ def hello_world():
 def personal_greeting(name):
     return f"Hello, {escape(name)}!";
 
-@application.route('/json')
-def get_json_data():
+@application.route('/getWorkers')
+def get_workers():
     return {
-        "name" : "Chan Tai Man",
-        "is_alive" : True,
-        "age" : 56,
-        "work_days" : [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday"
+        "workers" : [
+            {
+                "name" : "Chan Tai Man",
+                "sex" : "M",
+                "is_reg_member" : True,
+                "age" : 56,
+                "work_days" : [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" ]
+            },
+            {
+                "name" : "Ma Siu Ling",
+                "sex" : "F",
+                "is_reg_member" : False,
+                "age" : 22,
+                "work_days" : [ "Monday", "Wednesday", "Friday" ]
+            }
         ]
     }
 

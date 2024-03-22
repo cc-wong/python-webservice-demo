@@ -33,9 +33,9 @@ paths:
               schema:
                 type: string
                 example: Hello, Lulu!
-  /json:
+  /getWorkers:
     get:
-      description: Returns a test JSON response.
+      description: Returns a list of workers.
       responses:
         200:
           description: OK
@@ -44,20 +44,41 @@ paths:
               schema:
                 type: object
                 properties:
-                  name:
-                    type: string
-                    example: Chan Tai Man
-                  is_alive:
-                    type: boolean
-                    example: true
-                  age:
-                    type: integer
-                    example: 56
-                  work_days:
+                  workers:
+                    description: List of workers
                     type: array
                     items:
-                      type: string
-                    example: [ Monday, Tuesday, Wednesday ]
+                      type: object
+                      properties:
+                        name:
+                          description: Full name
+                          type: string
+                        sex:
+                          description: Sex (M/F)
+                          type: string
+                        is_reg_member:
+                          description: Is registered member?
+                          type: boolean
+                        age:
+                          description: Worker's age
+                          type: integer
+                        work_days:
+                          description: Worker's work days in a week
+                          type: array
+                          items:
+                            type: string
+              example:
+                workers:
+                  - name: Chan Tai Man
+                    sex: M
+                    is_reg_member: true
+                    age: 56
+                    work_days: [ Monday, Tuesday, Wednesday ]
+                  - name: Ma Siu Ling
+                    sex: F
+                    is_reg_member: false
+                    age: 44
+                    work_days: [ Friday ]
   /timestwo:
     post:
       description: Multiplies a given number by 2.
