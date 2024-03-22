@@ -4,6 +4,7 @@ from swagger_ui import flask_api_doc
 from markupsafe import escape
 import json
 from enum import Enum
+from datetime import datetime, timedelta
 
 
 application = create_app()
@@ -54,6 +55,30 @@ def multiply_by_two():
     return {
         "num" : num,
         "result" : result
+    }
+
+json_date_format = "%Y-%m-%d"
+
+@application.route('/calculateDate', methods=["POST"])
+def calculate_date():
+    try:
+        orig_date = datetime.strptime(request.json["date"], json_date_format)
+    except KeyError:
+        return "'date' is missing from request!", 400
+    except ValueError:
+        return "'date' must be in YYYY-MM-DD format!", 400
+    
+    try:
+        num_of_weeks = request.json["weeks"]
+    except KeyError:
+        return "'weeks' is missing from request!", 400
+    if not isinstance(num_of_weeks, int):
+        return "'weeks' must be an integer!", 400
+    time_delta = timedelta(weeks=num_of_weeks)
+
+    new_time = orig_date + time_delta
+    return {
+        "result" : new_time.strftime(json_date_format)
     }
 
 if __name__ == "__main__":

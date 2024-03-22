@@ -70,7 +70,6 @@ paths:
               5 - Invalid value:
                 value:
                   work_days: ["MONDAY", "INVALID"]
-
       responses:
         200:
           description: OK
@@ -151,3 +150,55 @@ paths:
           description: |
             Bad request. "num" must exist in the request parameters and its value must be an integer. \
             The response body will be the error message.
+  /calculateDate:
+    post:
+      description: Calculates a specific number of weeks before/after a given date.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  description: The given date to calculate from.
+                  type: string
+                weeks:
+                  description: |
+                    The number of weeks to calculate. \
+                    Use a negative number to calculate past dates.
+                  type: int
+            examples:
+              1 - Calculate future date:
+                value:
+                  date: "2024-05-27"
+                  weeks: 10
+              2 - Calculate past date:
+                value:
+                  date: "2024-03-24"
+                  weeks: -2
+              3 - Incorrect 'date' format:
+                value:
+                  date: "2024/99/6662"
+                  weeks: 10
+              4 - Incorrect 'weeks' format:
+                value:
+                  date: "2024-03-24"
+                  weeks: asdf
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    description: The calculated date.
+                    type: string
+                    example: "2024-08-05"
+        400:
+          description: | 
+            Bad request. \
+            It normally means that there is a problem in the request data.
+            See the message in the response data for details.

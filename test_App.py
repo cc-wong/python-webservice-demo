@@ -3,6 +3,8 @@ from unittest.mock import patch, mock_open
 from flaskapp import create_app
 from App import application
 import json
+from datetime import date, timedelta
+from enum import Enum
 
 class TestWebApp(unittest.TestCase):
 
@@ -91,13 +93,7 @@ class TestWebApp(unittest.TestCase):
         filename = "data/worker_list.json"
 
         response = self.client.post('/getWorkers', json=param_work_days)
-        assert response.status_code == expected_status_code
-
-        if expected_status_code == 200:
-            data = json.loads(response.get_data())
-            self.assertEqual(expected_data, data)
-        else:
-            assert response.data.decode('utf-8') == expected_data
+        self.verify_endpoint_with_json_response_data(response, expected_status_code, expected_data)
 
         assert open(filename, "utf8").read() == TestWebApp.workers_json_text
         mock_file.assert_called_with(filename, "utf8")
@@ -125,3 +121,86 @@ class TestWebApp(unittest.TestCase):
         response = self.client.post('/timestwo', data={})
         assert response.status_code == 400
         assert response.data.decode('utf-8') == "'num' not present in request parameters."
+
+    # Tests endpoint /calculateDate for calculating future date.
+    def test_calculate_date_future(self):
+        request_data = {
+            "date" : "2024-05-27",
+            "weeks" : 10
+        }
+        self.run_test_calculate_date(request_data, 200, {
+            "result" : "2024-08-05"
+        })
+    
+    # Tests endpoint /calculateDate for calculating past date.
+    def test_calculate_date_past(self):
+        request_data = {
+            "date" : "2024-03-24",
+            "weeks" : -2
+        }
+        self.run_test_calculate_date(request_data, 200, {
+            "result" : "2024-03-10"
+        })
+    
+    # Tests endpoint /calculateDate where "weeks" is equal to 0 (zero).
+    def test_calculate_date_weeks_is_zero(self):
+        request_data = {
+            "date" : "2024-05-27",
+            "weeks" : 0
+        }
+        self.run_test_calculate_date(request_data, 200, {
+            "result" : "2024-05-27"
+        })
+
+    # Tests endpoint /calculateDate where "date" is missing from the request data.
+    def test_calculate_date_missing_date(self):
+        request_data = {
+            "weeks" : 10
+        }
+        self.run_test_calculate_date(request_data, 400, "'date' is missing from request!")
+
+    # Tests endpoint /calculateDate where the format of "date" in the request data is invalid.
+    def test_calculate_date_invalid_date_format(self):
+        request_data = {
+            "date" : "2024/666/21",
+            "weeks" : 10
+        }
+        self.run_test_calculate_date(request_data, 400, "'date' must be in YYYY-MM-DD format!")
+
+    # Tests endpoint /calculateDate where "weeks" is missing from the request data.
+    def test_calculate_date_missing_weeks(self):
+        request_data = {
+            "date" : "2024-05-27"
+        }
+        self.run_test_calculate_date(request_data, 400, "'weeks' is missing from request!")
+
+    # Tests endpoint /calculateDate where "weeks" is not an integer.
+    def test_calculate_date_weeks_is_not_integer(self):
+        request_data = {
+            "date" : "2024-05-27",
+            "weeks" : 10.7
+        }
+        self.run_test_calculate_date(request_data, 400, "'weeks' must be an integer!")
+
+    # Tests endpoint /calculateDate where "weeks" is not numeric.
+    def test_calculate_date_weeks_is_not_numeric(self):
+        request_data = {
+            "date" : "2024-05-27",
+            "weeks" : "asdf10"
+        }
+        self.run_test_calculate_date(request_data, 400, "'weeks' must be an integer!")
+
+    # Runs a test case on endpoint /calculateDate
+    def run_test_calculate_date(self, request_data, expected_status_code, expected_data):
+        response = self.client.post('/calculateDate', json=request_data)
+        self.verify_endpoint_with_json_response_data(response, expected_status_code, expected_data)
+
+    # Verifies an endpoint where the normal response data is JSON.
+    def verify_endpoint_with_json_response_data(self, response, expected_status_code, expected_data):
+        assert response.status_code == expected_status_code
+
+        if expected_status_code == 200:
+            data = json.loads(response.get_data())
+            self.assertEqual(expected_data, data)
+        else:
+            assert response.data.decode('utf-8') == expected_data
