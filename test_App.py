@@ -43,30 +43,61 @@ class TestWebApp(unittest.TestCase):
                 "sex" : "M",
                 "is_reg_member" : True,
                 "age" : 56,
-                "work_days" : [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" ]
+                "work_days" : [ "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY" ]
+            },
+            {
+                "name" : "Three Cheung",
+                "sex" : "M",
+                "is_reg_member" : False,
+                "age" : 31,
+                "work_days" : [ "SATURDAY", "SUNDAY" ]
             },
             {
                 "name" : "Ma Siu Ling",
                 "sex" : "F",
                 "is_reg_member" : False,
                 "age" : 22,
-                "work_days" : [ "Monday", "Wednesday", "Friday" ]
+                "work_days" : [ "MONDAY", "WEDNESDAY", "FRIDAY" ]
             }
         ]
     }
     workers_json_text = json.dumps(workers)
 
-    ## Tests endpoint: /getWorkers
+    ## Tests endpoint /getWorkers where request parameter set is empty
+    def test_get_workers_paramset_empty(self):
+        self.run_test_get_workers({}, 200, TestWebApp.workers)
+
+    ## Tests endpoint /getWorkers where the work_days request parameter is an empty list
+    def test_get_workers_workdays_param_empty(self):
+        self.run_test_get_workers({ "work_days" : [] }, 200, TestWebApp.workers)
+
+    ## Tests endpoint /getWorkers where the work_days request parameter is non-empty
+    def test_get_workers_workdays_param_nonempty(self):
+        self.run_test_get_workers({ "work_days" : [ "MONDAY", "WEDNESDAY" ] }, 200, {
+            "workers" : [
+                TestWebApp.workers["workers"][0],
+                TestWebApp.workers["workers"][2]
+            ]
+        })
+
+    ## Tests endpoint /getWorkers where the work_days request parameter contains invalid values
+    def test_get_workers_workdays_param_invalid(self):
+        self.run_test_get_workers({ "work_days" : [ "MONDAY", "INVALID" ] },
+                                  400, "Invalid value for parameter work_days!")
+
+    ## Runs a test case on endpoint: /getWorkers
     @patch("builtins.open", new_callable=mock_open, read_data=workers_json_text)
-    def test_get_workers(self, mock_file):
-        expected = TestWebApp.workers
+    def run_test_get_workers(self, param_work_days, expected_status_code, expected_data, mock_file):
         filename = "data/worker_list.json"
 
-        response = self.client.get('/getWorkers')
-        assert response.status_code == 200
+        response = self.client.post('/getWorkers', json=param_work_days)
+        assert response.status_code == expected_status_code
 
-        data = json.loads(response.get_data())
-        self.assertEqual(expected, data)
+        if expected_status_code == 200:
+            data = json.loads(response.get_data())
+            self.assertEqual(expected_data, data)
+        else:
+            assert response.data.decode('utf-8') == expected_data
 
         assert open(filename, "utf8").read() == TestWebApp.workers_json_text
         mock_file.assert_called_with(filename, "utf8")

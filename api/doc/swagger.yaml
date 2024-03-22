@@ -34,8 +34,43 @@ paths:
                 type: string
                 example: Hello, Lulu!
   /getWorkers:
-    get:
-      description: Returns the list of workers configured in `data/worker_list.json`.
+    post:
+      description: |
+        Returns the list of workers configured in `data/worker_list.json`. \
+        \
+        If a non-empty list of day-of-week is passed in the request parameters,
+        the list will include only workers whose work days include all of the defined days-of-week. \
+        Accepted values: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY \
+        \
+        Otherwise, the whole list will be returned.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                work_days:
+                  description: This function will return workers whose work days include every entry in this list.
+                  type: array
+                  items:
+                    type: string
+            examples:
+              1 - Multiple entries:
+                value:
+                  work_days: ["MONDAY", "TUESDAY"]
+              2 - Single entry:
+                value:
+                  work_days: ["SUNDAY"]
+              3 - Empty list:
+                value:
+                  work_days: []
+              4 - Empty JSON:
+                value: {}
+              5 - Invalid value:
+                value:
+                  work_days: ["MONDAY", "INVALID"]
+
       responses:
         200:
           description: OK
@@ -79,6 +114,10 @@ paths:
                     is_reg_member: false
                     age: 44
                     work_days: [ Friday ]
+        400:
+          description: |
+            Bad request. \
+            The request parameter work_days includes an invalid value.
   /timestwo:
     post:
       description: Multiplies a given number by 2.

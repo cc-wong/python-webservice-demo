@@ -3,6 +3,7 @@ from flaskapp import create_app
 from swagger_ui import flask_api_doc
 from markupsafe import escape
 import json
+from enum import Enum
 
 
 application = create_app()
@@ -16,10 +17,25 @@ def hello_world():
 def personal_greeting(name):
     return f"Hello, {escape(name)}!";
 
-@application.route('/getWorkers')
+days_of_week = { "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY" }
+
+@application.route('/getWorkers', methods=["POST"])
 def get_workers():
     with open("data/worker_list.json", encoding="utf8") as data_file:
         worker_list = json.load(data_file)
+
+    work_days = set([] if "work_days" not in request.json else request.json["work_days"])
+    application.logger.debug(f"Request param work_days: {work_days}")
+    application.logger.debug(request.json)
+    if len(work_days) > 0:
+        if not work_days.issubset(days_of_week): # "work_days" includes an invalid value
+            application.logger.error(f"Invalid value(s) in work_days!\nRequest: {request.json}")
+            return "Invalid value for parameter work_days!", 400
+        return {
+            "workers" : [
+                worker for worker in worker_list["workers"] if work_days.issubset(worker["work_days"])
+            ]
+        }
     return worker_list
 
 @application.route('/timestwo', methods=["POST"])

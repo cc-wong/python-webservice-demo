@@ -5,28 +5,28 @@
             "sex" : "M",
             "is_reg_member" : true,
             "age" : 56,
-            "work_days" : [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" ]
+            "work_days" : [ "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY" ]
         },
         {
             "name" : "Ma Siu Ling",
             "sex" : "F",
             "is_reg_member" : false,
             "age" : 22,
-            "work_days" : [ "Monday", "Wednesday", "Friday" ]
+            "work_days" : [ "MONDAY", "WEDNESDAY", "FRIDAY" ]
         },
         {
             "name" : "Three Cheung",
             "sex" : "M",
             "is_reg_member" : false,
             "age" : 31,
-            "work_days" : [ "Sunday", "Saturday" ]
+            "work_days" : [ "SATURDAY", "SUNDAY" ]
         },
         {
             "name" : "Four Lee",
             "sex" : "M",
             "is_reg_member" : true,
             "age" : 18,
-            "work_days" : [ "Sunday", "Wednesday", "Thursday" ]
+            "work_days" : [ "TUESDAY", "THURSDAY", "SUNDAY"]
         }
     ]
 }
