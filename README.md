@@ -1,9 +1,11 @@
 # Python Web Service Demo
 A simple demonstration web service app with Python and Flask.
 
-Includes:
+This project also demonstrates:
 1. API documentation by Swagger UI
-2. Configuration files for deployment to Docker
+2. Support for deployment to Docker
+3. Unit tests for the Python application
+4. GitHub workflow configurations to run unit tests, build and push the image to Docker
 
 ## Pre-requisites
 * Flask
@@ -45,3 +47,9 @@ Reference: <https://docs.docker.com/language/python/containerize/>
 For commands at the terminal, see: <https://docs.docker.com/language/python/deploy/>
 
 Curl command for verification: `curl http://localhost:30001/`
+
+### Running unit tests
+
+1. Go to the root directory of this project in the terminal.
+2. Run the command: `pytest`
+   - To populate application logs to the console, use `pytest -o log_cli=true`
