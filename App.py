@@ -3,7 +3,6 @@ from flaskapp import create_app
 from swagger_ui import flask_api_doc
 from markupsafe import escape
 import json
-from enum import Enum
 from datetime import datetime, timedelta
 
 

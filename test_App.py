@@ -1,10 +1,7 @@
 import unittest
 from unittest.mock import patch, mock_open
-from flaskapp import create_app
 from App import application
 import json
-from datetime import date, timedelta
-from enum import Enum
 
 class TestWebApp(unittest.TestCase):
 
