@@ -35,7 +35,7 @@ paths:
                 example: Hello, Lulu!
   /getWorkers:
     get:
-      description: Returns a list of workers.
+      description: Returns the list of workers configured in `data/worker_list.json`.
       responses:
         200:
           description: OK

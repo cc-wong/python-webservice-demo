@@ -2,6 +2,7 @@ from flask import request
 from flaskapp import create_app
 from swagger_ui import flask_api_doc
 from markupsafe import escape
+import json
 
 
 application = create_app()
@@ -17,24 +18,9 @@ def personal_greeting(name):
 
 @application.route('/getWorkers')
 def get_workers():
-    return {
-        "workers" : [
-            {
-                "name" : "Chan Tai Man",
-                "sex" : "M",
-                "is_reg_member" : True,
-                "age" : 56,
-                "work_days" : [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" ]
-            },
-            {
-                "name" : "Ma Siu Ling",
-                "sex" : "F",
-                "is_reg_member" : False,
-                "age" : 22,
-                "work_days" : [ "Monday", "Wednesday", "Friday" ]
-            }
-        ]
-    }
+    with open("data/worker_list.json", encoding="utf8") as data_file:
+        worker_list = json.load(data_file)
+    return worker_list
 
 @application.route('/timestwo', methods=["POST"])
 def multiply_by_two():

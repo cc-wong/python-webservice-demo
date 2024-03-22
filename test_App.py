@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch, mock_open
 from flaskapp import create_app
 from App import application
 import json
@@ -34,32 +35,42 @@ class TestWebApp(unittest.TestCase):
         message = response.get_data(as_text=True)
         assert message == f"Hello, {name}!"
 
+    # Mock JSON data in test cases on /getWorkers
+    workers = {
+        "workers" : [
+            {
+                "name" : "Chan Tai Man",
+                "sex" : "M",
+                "is_reg_member" : True,
+                "age" : 56,
+                "work_days" : [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" ]
+            },
+            {
+                "name" : "Ma Siu Ling",
+                "sex" : "F",
+                "is_reg_member" : False,
+                "age" : 22,
+                "work_days" : [ "Monday", "Wednesday", "Friday" ]
+            }
+        ]
+    }
+    workers_json_text = json.dumps(workers)
+
     ## Tests endpoint: /getWorkers
-    def test_get_workers(self):
+    @patch("builtins.open", new_callable=mock_open, read_data=workers_json_text)
+    def test_get_workers(self, mock_file):
+        expected = TestWebApp.workers
+        filename = "data/worker_list.json"
+
         response = self.client.get('/getWorkers')
         assert response.status_code == 200
 
-        expected = {
-            "workers" : [
-                {
-                    "name" : "Chan Tai Man",
-                    "sex" : "M",
-                    "is_reg_member" : True,
-                    "age" : 56,
-                    "work_days" : [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" ]
-                },
-                {
-                    "name" : "Ma Siu Ling",
-                    "sex" : "F",
-                    "is_reg_member" : False,
-                    "age" : 22,
-                    "work_days" : [ "Monday", "Wednesday", "Friday" ]
-                }
-            ]
-        }
         data = json.loads(response.get_data())
         self.assertEqual(expected, data)
-    
+
+        assert open(filename, "utf8").read() == TestWebApp.workers_json_text
+        mock_file.assert_called_with(filename, "utf8")
+
     # Tests endpoint: /timestwo; happy path
     def test_multiply_by_two_normal(self):
         response = self.client.post('/timestwo', data={"num" : 3})
