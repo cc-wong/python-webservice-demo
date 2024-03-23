@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Python Web Service Demo
   description: A simple demonstration web service app with Python and Flask.
-  version: 1.1.0
+  version: 1.2.0
 paths:
   /:
     get:
