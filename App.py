@@ -107,7 +107,7 @@ def calculate_date():
         "result" : new_time.strftime(json_date_format)
     }
 
-@application.route('/getHonbashoSchedule', methods=["GET"])
+@application.route('/getSumoHonbashoSchedule', methods=["GET"])
 def get_honbasho_schedule():
     """
     Calculates and returns the Grand Sumo Tournament schedule for a given year.

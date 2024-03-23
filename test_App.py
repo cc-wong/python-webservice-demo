@@ -275,7 +275,7 @@ class TestWebApp(unittest.TestCase):
     @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
     def test_get_honbasho_schedule(self, mock_calculate):
         """
-        Normal test case on endpoint /getHonbashoSchedule.
+        Normal test case on endpoint /getSumoHonbashoSchedule.
         """
 
         year = 2020
@@ -314,7 +314,7 @@ class TestWebApp(unittest.TestCase):
         expected_data = {
             "result" : [
                 {
-                    "basho": "Hatsu",
+                    "basho": "HATSU",
                     "month": 1,
                     "month_name": calendar.month_name[1],
                     "dates": ["2020-01-12", "2020-01-13", "2020-01-14", "2020-01-15", "2020-01-16", "2020-01-17", "2020-01-18",
@@ -322,7 +322,7 @@ class TestWebApp(unittest.TestCase):
                             "2020-01-26"]
                 },
                 {
-                    "basho": "Haru",
+                    "basho": "HARU",
                     "month": 3,
                     "month_name": calendar.month_name[3],
                     "dates": ["2020-03-08", "2020-03-09", "2020-03-10", "2020-03-11", "2020-03-12", "2020-03-13", "2020-03-14",
@@ -330,7 +330,7 @@ class TestWebApp(unittest.TestCase):
                             "2020-03-22"]
                 },
                 {
-                    "basho": "Nagoya",
+                    "basho": "NAGOYA",
                     "month": 7,
                     "month_name": calendar.month_name[7],
                     "dates": ["2020-07-12", "2020-07-13", "2020-07-14", "2020-07-15", "2020-07-16", "2020-07-17", "2020-07-18",
@@ -338,7 +338,7 @@ class TestWebApp(unittest.TestCase):
                             "2020-07-26"]
                 },
                 {
-                    "basho": "Aki",
+                    "basho": "AKI",
                     "month": 9,
                     "month_name": calendar.month_name[9],
                     "dates": ["2020-09-13", "2020-09-14", "2020-09-15", "2020-09-16", "2020-09-17", "2020-09-18", "2020-09-19",
@@ -346,7 +346,7 @@ class TestWebApp(unittest.TestCase):
                             "2020-09-27"]
                 },
                 {
-                    "basho": "Kyushu",
+                    "basho": "KYUSHU",
                     "month": 11,
                     "month_name": calendar.month_name[11],
                     "dates": ["2020-11-08", "2020-11-09", "2020-11-10", "2020-11-11", "2020-11-12", "2020-11-13", "2020-11-14",
@@ -362,7 +362,7 @@ class TestWebApp(unittest.TestCase):
     @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
     def test_get_honbasho_schedule_noargs(self, mock_calculate):
         """
-        Test case on /getHonbashoSchedule where the argument "year" is not provided.
+        Test case on /getSumoHonbashoSchedule where the argument "year" is not provided.
         """
 
         self.run_get_honbasho_schedule(expected_status_code=400,
@@ -372,7 +372,7 @@ class TestWebApp(unittest.TestCase):
     @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
     def test_get_honbasho_schedule_year_not_integer(self, mock_calculate):
         """
-        Test case on /getHonbashoSchedule where the value of argument "year" is not an integer.
+        Test case on /getSumoHonbashoSchedule where the value of argument "year" is not an integer.
         """
         
         self.run_get_honbasho_schedule(args={ "year": 20027.7 },
@@ -383,7 +383,7 @@ class TestWebApp(unittest.TestCase):
     @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
     def test_get_honbasho_schedule_year_before_2012(self, mock_calculate):
         """
-        Test case on /getHonbashoSchedule where the "year" is before 2012.
+        Test case on /getSumoHonbashoSchedule where the "year" is before 2012.
         """
         
         self.run_get_honbasho_schedule(args={ "year": 2011 },
@@ -394,7 +394,7 @@ class TestWebApp(unittest.TestCase):
     @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
     def test_get_honbasho_schedule_year_after_2100(self, mock_calculate):
         """
-        Test case on /getHonbashoSchedule where the "year" is after 2100.
+        Test case on /getSumoHonbashoSchedule where the "year" is after 2100.
         """
         
         self.run_get_honbasho_schedule(args={ "year": 2101 },
@@ -404,10 +404,10 @@ class TestWebApp(unittest.TestCase):
 
     def run_get_honbasho_schedule(self, args={}, expected_status_code=200, expected_data={}):
         """
-        Runs a test case on endpoint /getHonbashoSchedule.
+        Runs a test case on endpoint /getSumoHonbashoSchedule.
         """
 
-        response = self.client.get('/getHonbashoSchedule', query_string=args)
+        response = self.client.get('/getSumoHonbashoSchedule', query_string=args)
         self.verify_endpoint_with_json_response_data(response, expected_status_code, expected_data)
 
 

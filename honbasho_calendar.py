@@ -19,7 +19,6 @@ class HonbashoCalendar():
         The numeral value indicates the month the corresponding tournament is held in,
         eg. Hatsu Basho is in January.
         """
-
         HATSU = 1
         HARU = 3
         NATSU = 5
@@ -29,23 +28,20 @@ class HonbashoCalendar():
 
         def get_name(self):
             """
-            Returns the basho name in proper case.
+            Returns the tournament name as the enumeration name as-is.
             """
-
-            return self.name.title()
+            return self.name
         
         def get_month(self):
             """
-            Returns the month this basho is in.
+            Returns the month this tournament is in.
             """
-
             return self.value
         
         def get_month_name(self):
             """
-            Returns the name of the month this basho is in.
+            Returns the name of the month this tournament is in.
             """
-
             return calendar.month_name[self.value]
 
 

@@ -202,7 +202,7 @@ paths:
             Bad request. \
             It normally means that there is a problem in the request data.
             See the message in the response data for details.
-  /getHonbashoSchedule:
+  /getSumoHonbashoSchedule:
     get:
       description: |
         Determines the schedule of the Ozumo Honbasho (Grand Sumo Tournament)
