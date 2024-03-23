@@ -56,12 +56,12 @@ paths:
                   items:
                     type: string
             examples:
-              1 - Multiple entries:
+              1 - Multiple days of a week:
                 value:
-                  work_days: ["MONDAY", "TUESDAY"]
-              2 - Single entry:
+                  work_days: [ MONDAY, TUESDAY ]
+              2 - A single day of a week:
                 value:
-                  work_days: ["SUNDAY"]
+                  work_days: [ SUNDAY ]
               3 - Empty list:
                 value:
                   work_days: []
@@ -69,7 +69,7 @@ paths:
                 value: {}
               5 - Invalid value:
                 value:
-                  work_days: ["MONDAY", "INVALID"]
+                  work_days: [ MONDAY, INVALID ]
       responses:
         200:
           description: OK
@@ -107,16 +107,16 @@ paths:
                     sex: M
                     is_reg_member: true
                     age: 56
-                    work_days: [ Monday, Tuesday, Wednesday ]
+                    work_days: [ MONDAY, TUESDAY, WEDNESDAY ]
                   - name: Ma Siu Ling
                     sex: F
                     is_reg_member: false
                     age: 44
-                    work_days: [ Friday ]
+                    work_days: [ FRIDAY ]
         400:
           description: |
             Bad request. \
-            The request parameter work_days includes an invalid value.
+            The request parameter `work_days` includes an invalid value.
   /timestwo:
     post:
       description: Multiplies a given number by 2.
@@ -148,7 +148,7 @@ paths:
                     example: 6
         400:
           description: |
-            Bad request. "num" must exist in the request parameters and its value must be an integer. \
+            Bad request. `num` must exist in the request parameters and its value must be an integer. \
             The response body will be the error message.
   /calculateDate:
     post:
@@ -236,13 +236,13 @@ paths:
                       type: object
                       properties:
                         basho:
-                          description: Basho name, eg. Hatsu, Haru
+                          description: Tournament name, eg. Hatsu, Haru.
                           type: string
                         month:
-                          description: Number representing the month of the basho.
+                          description: Number representing the month of the tournament.
                           type: integer
                         month_name:
-                          description: Month name of the basho.
+                          description: Month name of the tournament.
                           type: string
                         dates:
                           description: Tournament dates in chronical order.
@@ -262,6 +262,6 @@ paths:
         400:
           description: |
             Bad request. \
-            The parameter "year" is either absent, not a valid year number,
-            or less than 2012 or greater than 2100. \
+            The parameter `year` is either absent, not a valid year number,
+            or outside the allowed value range. \
             See the message returned in the response data for details.
