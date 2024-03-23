@@ -1,8 +1,12 @@
 from flask import Flask
 from logging.config import dictConfig
 
-## Application factory
+
 def create_app():
+    """
+    The application factory.
+    """
+
     dictConfig({
         'version': 1,
         'formatters': {'default': {

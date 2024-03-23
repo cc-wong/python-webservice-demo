@@ -6,21 +6,39 @@ import json
 from datetime import datetime, timedelta
 from honbasho_calendar import HonbashoCalendar
 
+
 application = create_app()
 flask_api_doc(application, config_path='./api/doc/swagger.yaml', url_prefix='/api/doc', title='python-webservice-demo | API doc')
 
 @application.route('/')
 def hello_world():
+    """
+    Default endpoint. Prints a "Hello World" message.
+    """
+
     return '<h1>Hello World!</h1>'
 
 @application.route('/<name>')
 def personal_greeting(name):
+    """
+    Prints a personalized greeting.
+
+    :param name: The name to use for the greeting.
+    """
+
     return f"Hello, {escape(name)}!";
 
 days_of_week = { "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY" }
 
 @application.route('/getWorkers', methods=["POST"])
 def get_workers():
+    """
+    Retrieves a list of workers from a JSON file.
+
+    If a set of work days (as day of week) is provided in the request data,
+    only workers whose work days include all the specified days of week will be returned.
+    """
+
     with open("data/worker_list.json", encoding="utf8") as data_file:
         worker_list = json.load(data_file)
 
@@ -40,6 +58,10 @@ def get_workers():
 
 @application.route('/timestwo', methods=["POST"])
 def multiply_by_two():
+    """
+    Multiplies a given integer by 2.
+    """
+
     if 'num' not in request.form:
         application.logger.error("'num' not present in request parameters.\n request.form: %s", request.form)
         return "'num' not present in request parameters.", 400
@@ -60,6 +82,11 @@ json_date_format = "%Y-%m-%d"
 
 @application.route('/calculateDate', methods=["POST"])
 def calculate_date():
+    """
+    Calculates the date a specified number of weeks
+    before/after a given date.
+    """
+
     try:
         orig_date = datetime.strptime(request.json["date"], json_date_format)
     except KeyError:

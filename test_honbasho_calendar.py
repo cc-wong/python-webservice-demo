@@ -2,11 +2,17 @@ import unittest
 from honbasho_calendar import HonbashoCalendar
 from datetime import date
 
-## Test case(s) for the HonbashoCalendar module.
-class TestHonbashoCalendar(unittest.TestCase):
 
-    ## Test case on calculate_schedule(year).
+class TestHonbashoCalendar(unittest.TestCase):
+    """
+    Test case(s) for the module `HonbashoCalendar`.
+    """
+
     def test_calculate_schedule(self):
+        """
+        Test case on function `calculate_schedule(year)`.
+        """
+
         year = 2024
         expected = [
             {
