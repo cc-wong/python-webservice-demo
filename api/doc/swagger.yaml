@@ -202,3 +202,66 @@ paths:
             Bad request. \
             It normally means that there is a problem in the request data.
             See the message in the response data for details.
+  /getHonbashoSchedule:
+    get:
+      description: |
+        Determines the schedule of the Ozumo Honbasho (Grand Sumo Tournament)
+        for a given year. \
+        \
+        The tournaments are scheduled as follows:
+        1. 6 (six) tournaments are held every year, in odd-number months.
+        2. A tournament starts on the 2nd Sunday of a month and
+          lasts for 15 (fifteen) consecutive days.
+          Therefore the last day of a tournament will be on the 4th Sunday of the month.
+      parameters:
+        - in: query
+          name: year
+          description: |
+            The year to determine the tournament schedule for. \
+            Must be between 2012 to 2100.
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        basho:
+                          description: Basho name, eg. Hatsu, Haru
+                          type: string
+                        month:
+                          description: Number representing the month of the basho.
+                          type: integer
+                        month_name:
+                          description: Month name of the basho.
+                          type: string
+                        dates:
+                          description: Tournament dates in chronical order.
+                          type: array
+                          items:
+                            type: string
+              example:
+                result:
+                  - basho: Hatsu
+                    month: 1
+                    month_name: January
+                    dates: [ '2024-01-14', '2024-01-15', '2024-01-16' ]
+                  - basho: Haru
+                    month: 3
+                    month_name: March
+                    dates: [ '2024-03-10', '2024-03-11', '2024-03-12' ]
+        400:
+          description: |
+            Bad request. \
+            The parameter "year" is either absent, not a valid year number,
+            or less than 2012 or greater than 2100. \
+            See the message returned in the response data for details.
