@@ -8,7 +8,7 @@ from honbasho_calendar import HonbashoCalendar
 
 
 application = create_app()
-flask_api_doc(application, config_path='./api/doc/swagger.yaml', url_prefix='/api/doc', title='python-webservice-demo | API doc')
+flask_api_doc(application, config_path='./api/doc/swagger.yaml', url_prefix='/api/doc', title='Python Web Service Demo | API doc')
 
 @application.route('/')
 def hello_world():

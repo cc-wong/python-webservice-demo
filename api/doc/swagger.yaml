@@ -3,9 +3,21 @@ info:
   title: Python Web Service Demo
   description: A simple demonstration web service app with Python and Flask.
   version: 1.2.0
+tags:
+- name: "SimpleText"
+  description: "Operations that return a simple text message."
+- name: "Calculation"
+  description: "Operations that perform calculations on values."
+- name: "GetData"
+  description: "Operations that lookup/populate a set of data."
+schemes:
+- "https"
+- "http"
 paths:
   /:
     get:
+      tags:
+      - "SimpleText"
       description: Prints a simple "Hello World" message.
       responses:
         200:
@@ -17,6 +29,8 @@ paths:
                 example: <h1>Hello World!</h1>
   /{name}:
     get:
+      tags:
+      - "SimpleText"
       description: Prints a personalized greeting with the name provided by <name>.
       parameters:
         - name: name
@@ -35,6 +49,8 @@ paths:
                 example: Hello, Lulu!
   /getWorkers:
     post:
+      tags:
+      - "GetData"
       description: |
         Returns the list of workers configured in `data/worker_list.json`. \
         \
@@ -119,6 +135,8 @@ paths:
             The request parameter `work_days` includes an invalid value.
   /timestwo:
     post:
+      tags:
+      - "Calculation"
       description: Multiplies a given number by 2.
       requestBody:
         required: true
@@ -152,6 +170,8 @@ paths:
             The response body will be the error message.
   /calculateDate:
     post:
+      tags:
+      - "Calculation"
       description: Calculates a specific number of weeks before/after a given date.
       requestBody:
         required: true
@@ -204,6 +224,8 @@ paths:
             See the message in the response data for details.
   /getSumoHonbashoSchedule:
     get:
+      tags:
+      - "GetData"
       description: |
         Determines the schedule of the Ozumo Honbasho (Grand Sumo Tournament)
         for a given year. \
