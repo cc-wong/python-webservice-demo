@@ -2,6 +2,9 @@ import unittest
 from unittest.mock import patch, mock_open
 from App import application
 import json
+from datetime import date
+import calendar
+from honbasho_calendar import HonbashoCalendar
 
 class TestWebApp(unittest.TestCase):
 
@@ -192,8 +195,151 @@ class TestWebApp(unittest.TestCase):
         response = self.client.post('/calculateDate', json=request_data)
         self.verify_endpoint_with_json_response_data(response, expected_status_code, expected_data)
 
-    # Verifies an endpoint where the normal response data is JSON.
+    @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
+    def test_get_honbasho_schedule(self, mock_calculate):
+        """
+        Normal test case on endpoint /getHonbashoSchedule.
+        """
+
+        year = 2020
+        mock_schedule = [
+            {
+                "basho": HonbashoCalendar.Basho.HATSU,
+                "dates": [date(2020, 1, 12), date(2020, 1, 13), date(2020, 1, 14), date(2020, 1, 15), date(2020, 1, 16), date(2020, 1, 17), date(2020, 1, 18),
+                          date(2020, 1, 19), date(2020, 1, 20), date(2020, 1, 21), date(2020, 1, 22), date(2020, 1, 23), date(2020, 1, 24), date(2020, 1, 25),
+                          date(2020, 1, 26)]
+            },
+            {
+                "basho": HonbashoCalendar.Basho.HARU,
+                "dates": [date(2020, 3, 8), date(2020, 3, 9), date(2020, 3, 10), date(2020, 3, 11), date(2020, 3, 12), date(2020, 3, 13), date(2020, 3, 14),
+                          date(2020, 3, 15), date(2020, 3, 16), date(2020, 3, 17), date(2020, 3, 18), date(2020, 3, 19), date(2020, 3, 20), date(2020, 3, 21),
+                          date(2020, 3, 22)]
+            },
+            {
+                "basho": HonbashoCalendar.Basho.NAGOYA,
+                "dates": [date(2020, 7, 12), date(2020, 7, 13), date(2020, 7, 14), date(2020, 7, 15), date(2020, 7, 16), date(2020, 7, 17), date(2020, 7, 18),
+                          date(2020, 7, 19), date(2020, 7, 20), date(2020, 7, 21), date(2020, 7, 22), date(2020, 7, 23), date(2020, 7, 24), date(2020, 7, 25),
+                          date(2020, 7, 26)]
+            },
+            {
+                "basho": HonbashoCalendar.Basho.AKI,
+                "dates": [date(2020, 9, 13), date(2020, 9, 14), date(2020, 9, 15), date(2020, 9, 16), date(2020, 9, 17), date(2020, 9, 18), date(2020, 9, 19),
+                          date(2020, 9, 20), date(2020, 9, 21), date(2020, 9, 22), date(2020, 9, 23), date(2020, 9, 24), date(2020, 9, 25), date(2020, 9, 26),
+                          date(2020, 9, 27)]
+            },
+            {
+                "basho": HonbashoCalendar.Basho.KYUSHU,
+                "dates": [date(2020, 11, 8), date(2020, 11, 9), date(2020, 11, 10), date(2020, 11, 11), date(2020, 11, 12), date(2020, 11, 13), date(2020, 11, 14),
+                          date(2020, 11, 15), date(2020, 11, 16), date(2020, 11, 17), date(2020, 11, 18), date(2020, 11, 19), date(2020, 11, 20), date(2020, 11, 21),
+                          date(2020, 11, 22)]
+            }
+        ]
+        expected_data = {
+            "result" : [
+                {
+                    "basho": "Hatsu",
+                    "month": 1,
+                    "month_name": calendar.month_name[1],
+                    "dates": ["2020-01-12", "2020-01-13", "2020-01-14", "2020-01-15", "2020-01-16", "2020-01-17", "2020-01-18",
+                            "2020-01-19", "2020-01-20", "2020-01-21", "2020-01-22", "2020-01-23", "2020-01-24", "2020-01-25",
+                            "2020-01-26"]
+                },
+                {
+                    "basho": "Haru",
+                    "month": 3,
+                    "month_name": calendar.month_name[3],
+                    "dates": ["2020-03-08", "2020-03-09", "2020-03-10", "2020-03-11", "2020-03-12", "2020-03-13", "2020-03-14",
+                            "2020-03-15", "2020-03-16", "2020-03-17", "2020-03-18", "2020-03-19", "2020-03-20", "2020-03-21",
+                            "2020-03-22"]
+                },
+                {
+                    "basho": "Nagoya",
+                    "month": 7,
+                    "month_name": calendar.month_name[7],
+                    "dates": ["2020-07-12", "2020-07-13", "2020-07-14", "2020-07-15", "2020-07-16", "2020-07-17", "2020-07-18",
+                            "2020-07-19", "2020-07-20", "2020-07-21", "2020-07-22", "2020-07-23", "2020-07-24", "2020-07-25",
+                            "2020-07-26"]
+                },
+                {
+                    "basho": "Aki",
+                    "month": 9,
+                    "month_name": calendar.month_name[9],
+                    "dates": ["2020-09-13", "2020-09-14", "2020-09-15", "2020-09-16", "2020-09-17", "2020-09-18", "2020-09-19",
+                            "2020-09-20", "2020-09-21", "2020-09-22", "2020-09-23", "2020-09-24", "2020-09-25", "2020-09-26",
+                            "2020-09-27"]
+                },
+                {
+                    "basho": "Kyushu",
+                    "month": 11,
+                    "month_name": calendar.month_name[11],
+                    "dates": ["2020-11-08", "2020-11-09", "2020-11-10", "2020-11-11", "2020-11-12", "2020-11-13", "2020-11-14",
+                            "2020-11-15", "2020-11-16", "2020-11-17", "2020-11-18", "2020-11-19", "2020-11-20", "2020-11-21",
+                            "2020-11-22"]
+                }
+            ]
+        }
+        mock_calculate.return_value = mock_schedule
+        self.run_get_honbasho_schedule(args={ "year": year }, expected_data=expected_data)
+        mock_calculate.assert_called_once_with(year)
+        # mock_calculate.assert_not_called()
+
+    @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
+    def test_get_honbasho_schedule_noargs(self, mock_calculate):
+        """
+        Test case on /getHonbashoSchedule where the argument "year" is not provided.
+        """
+
+        self.run_get_honbasho_schedule(expected_status_code=400,
+                                       expected_data="'year' must be provided in the request arguments!")
+        mock_calculate.assert_not_called()
+
+    @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
+    def test_get_honbasho_schedule_year_not_integer(self, mock_calculate):
+        """
+        Test case on /getHonbashoSchedule where the value of argument "year" is not an integer.
+        """
+        
+        self.run_get_honbasho_schedule(args={ "year": 20027.7 },
+                                       expected_status_code=400,
+                                       expected_data="Request argument 'year' must be an integer!")
+        mock_calculate.assert_not_called()
+
+    @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
+    def test_get_honbasho_schedule_year_before_2012(self, mock_calculate):
+        """
+        Test case on /getHonbashoSchedule where the "year" is before 2012.
+        """
+        
+        self.run_get_honbasho_schedule(args={ "year": 2011 },
+                                       expected_status_code=400,
+                                       expected_data="Request argument 'year' must be between 2012 and 2100!")
+        mock_calculate.assert_not_called()
+
+    @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
+    def test_get_honbasho_schedule_year_after_2100(self, mock_calculate):
+        """
+        Test case on /getHonbashoSchedule where the "year" is after 2100.
+        """
+        
+        self.run_get_honbasho_schedule(args={ "year": 2101 },
+                                        expected_status_code=400,
+                                        expected_data="Request argument 'year' must be between 2012 and 2100!")
+        mock_calculate.assert_not_called()
+
+    def run_get_honbasho_schedule(self, args={}, expected_status_code=200, expected_data={}):
+        """
+        Runs a test case on endpoint /getHonbashoSchedule.
+        """
+
+        response = self.client.get('/getHonbashoSchedule', query_string=args)
+        self.verify_endpoint_with_json_response_data(response, expected_status_code, expected_data)
+
+
     def verify_endpoint_with_json_response_data(self, response, expected_status_code, expected_data):
+        """
+        Verifies an endpoint where the normal response data is JSON.
+        """
+
         assert response.status_code == expected_status_code
 
         if expected_status_code == 200:

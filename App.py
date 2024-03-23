@@ -4,7 +4,7 @@ from swagger_ui import flask_api_doc
 from markupsafe import escape
 import json
 from datetime import datetime, timedelta
-
+from honbasho_calendar import HonbashoCalendar
 
 application = create_app()
 flask_api_doc(application, config_path='./api/doc/swagger.yaml', url_prefix='/api/doc', title='python-webservice-demo | API doc')
@@ -79,6 +79,40 @@ def calculate_date():
     return {
         "result" : new_time.strftime(json_date_format)
     }
+
+@application.route('/getHonbashoSchedule', methods=["GET"])
+def get_honbasho_schedule():
+    """
+    Calculates and returns the Grand Sumo Tournament schedule for a given year.
+
+    Requires an argument "year", which is an year number (integer).
+    The year must be between 2012 and 2100, inclusive.
+    """
+
+    if not "year" in request.args:
+        return "'year' must be provided in the request arguments!", 400
+    
+    try:
+        year = int(request.args["year"])
+    except ValueError:
+        return "Request argument 'year' must be an integer!", 400
+    if not 2012 <= year <= 2100:
+        return "Request argument 'year' must be between 2012 and 2100!", 400
+    schedule = HonbashoCalendar.calculate_schedule(year)
+
+    result = []
+    for basho in schedule:
+        label = basho["basho"]
+        result.append({
+            "basho" : label.get_name(),
+            "month" : label.get_month(),
+            "month_name": label.get_month_name(),
+            "dates" : [ d .strftime(json_date_format) for d in basho["dates"] ]
+        })
+    return {
+        "result" : result
+    }
+
 
 if __name__ == "__main__":
     application.run(debug=True)

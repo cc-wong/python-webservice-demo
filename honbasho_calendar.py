@@ -56,3 +56,5 @@ class HonbashoCalendar():
             for day in cal[w]:
                 dates.append(date(year, month, day))
         return dates
+
+# print(HonbashoCalendar.calculate_schedule(2020))
