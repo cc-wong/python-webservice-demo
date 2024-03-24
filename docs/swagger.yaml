@@ -190,7 +190,9 @@ paths:
               type: object
               properties:
                 date:
-                  description: The given date to calculate from.
+                  description: |
+                    The given date to calculate from.<br/>
+                    Format: YYYY-MM-DD
                   type: string
                 weeks:
                   description: |
@@ -223,7 +225,9 @@ paths:
                 type: object
                 properties:
                   result:
-                    description: The calculated date.
+                    description: |
+                      The calculated date.<br/>
+                      Format: YYYY-MM-DD
                     type: string
                     example: "2024-08-05"
         400:
@@ -267,7 +271,9 @@ paths:
                       type: object
                       properties:
                         basho:
-                          description: Tournament name, eg. Hatsu, Haru.
+                          description: |
+                            Tournament name.<br/>
+                            Possible values: HATSU, HARU, NATSU, NAGOYA, AKI, KYUSHU
                           type: string
                         month:
                           description: Number representing the month of the tournament.
@@ -280,6 +286,7 @@ paths:
                           type: array
                           items:
                             type: string
+                            description: "Format: YYYY-MM-DD"
               example:
                 result:
                   - basho: Hatsu
