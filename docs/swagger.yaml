@@ -9,6 +9,8 @@ externalDocs:
 servers:
   - url: https://python-webservice-demo.onrender.com
     description: "On Render (latest release)"
+  - url: https://python-webservice-demo-test.onrender.com
+    description: "On Render (test)"
   # - url: /
   #   description: Local environment
 tags:
