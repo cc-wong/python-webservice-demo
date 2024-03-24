@@ -1,0 +1,294 @@
+openapi: "3.0.0"
+info:
+  title: Python Web Service Demo
+  description: A simple demonstration web service app with Python and Flask.
+  version: "1.2.0"
+externalDocs:
+  description: Source code at GitHub
+  url: "https://github.com/cc-wong/python-webservice-demo"
+servers:
+  - url: https://python-webservice-demo.onrender.com
+    description: "On Render (latest release)"
+  # - url: /
+  #   description: Local environment
+tags:
+- name: "SimpleText"
+  description: "Operations that return a simple text message."
+- name: "Calculation"
+  description: "Operations that perform calculations on values."
+- name: "GetData"
+  description: "Operations that lookup/populate a set of data."
+paths:
+  /:
+    get:
+      tags:
+      - "SimpleText"
+      description: Prints a simple "Hello World" message.
+      responses:
+        200:
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+                example: <h1>Hello World!</h1>
+  /{name}:
+    get:
+      tags:
+      - "SimpleText"
+      description: Prints a personalized greeting with the name provided by <name>.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: The name to be used for the greeting.
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Hello, Lulu!
+  /getWorkers:
+    post:
+      tags:
+      - "GetData"
+      description: |
+        Returns the list of workers configured in `data/worker_list.json`. \
+        \
+        If a non-empty list of day-of-week is passed in the request parameters,
+        the list will include only workers whose work days include all of the defined days-of-week. \
+        Accepted values: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY \
+        \
+        Otherwise, the whole list will be returned.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                work_days:
+                  description: This function will return workers whose work days include every entry in this list.
+                  type: array
+                  items:
+                    type: string
+            examples:
+              1 - Multiple days of a week:
+                value:
+                  work_days: [ MONDAY, TUESDAY ]
+              2 - A single day of a week:
+                value:
+                  work_days: [ SUNDAY ]
+              3 - Empty list:
+                value:
+                  work_days: []
+              4 - Empty JSON:
+                value: {}
+              5 - Invalid value:
+                value:
+                  work_days: [ MONDAY, INVALID ]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  workers:
+                    description: List of workers
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          description: Full name
+                          type: string
+                        sex:
+                          description: Sex (M/F)
+                          type: string
+                        is_reg_member:
+                          description: Is registered member?
+                          type: boolean
+                        age:
+                          description: Worker's age
+                          type: integer
+                        work_days:
+                          description: Worker's work days in a week
+                          type: array
+                          items:
+                            type: string
+              example:
+                workers:
+                  - name: Chan Tai Man
+                    sex: M
+                    is_reg_member: true
+                    age: 56
+                    work_days: [ MONDAY, TUESDAY, WEDNESDAY ]
+                  - name: Ma Siu Ling
+                    sex: F
+                    is_reg_member: false
+                    age: 44
+                    work_days: [ FRIDAY ]
+        400:
+          description: |
+            Bad request. \
+            The request parameter `work_days` includes an invalid value.
+  /timestwo:
+    post:
+      tags:
+      - "Calculation"
+      description: Multiplies a given number by 2.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                num:
+                  type: integer
+                  example: 3
+              required:
+                - num
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  num:
+                    type: integer
+                    example: 3
+                  result:
+                    type: integer
+                    example: 6
+        400:
+          description: |
+            Bad request. `num` must exist in the request parameters and its value must be an integer. \
+            The response body will be the error message.
+  /calculateDate:
+    post:
+      tags:
+      - "Calculation"
+      description: Calculates a specific number of weeks before/after a given date.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  description: The given date to calculate from.
+                  type: string
+                weeks:
+                  description: |
+                    The number of weeks to calculate. \
+                    Use a negative number to calculate past dates.
+                  type: int
+            examples:
+              1 - Calculate future date:
+                value:
+                  date: "2024-05-27"
+                  weeks: 10
+              2 - Calculate past date:
+                value:
+                  date: "2024-03-24"
+                  weeks: -2
+              3 - Incorrect 'date' format:
+                value:
+                  date: "2024/99/6662"
+                  weeks: 10
+              4 - Incorrect 'weeks' format:
+                value:
+                  date: "2024-03-24"
+                  weeks: asdf
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    description: The calculated date.
+                    type: string
+                    example: "2024-08-05"
+        400:
+          description: | 
+            Bad request. \
+            It normally means that there is a problem in the request data.
+            See the message in the response data for details.
+  /getSumoHonbashoSchedule:
+    get:
+      tags:
+      - "GetData"
+      description: |
+        Determines the schedule of the Ozumo Honbasho (Grand Sumo Tournament)
+        for a given year. \
+        \
+        The tournaments are scheduled as follows:
+        1. 6 (six) tournaments are held every year, in odd-number months.
+        2. A tournament starts on the 2nd Sunday of a month and
+          lasts for 15 (fifteen) consecutive days.
+          Therefore the last day of a tournament will be on the 4th Sunday of the month.
+      parameters:
+        - in: query
+          name: year
+          description: |
+            The year to determine the tournament schedule for. \
+            Must be between 2012 to 2100.
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        basho:
+                          description: Tournament name, eg. Hatsu, Haru.
+                          type: string
+                        month:
+                          description: Number representing the month of the tournament.
+                          type: integer
+                        month_name:
+                          description: Month name of the tournament.
+                          type: string
+                        dates:
+                          description: Tournament dates in chronical order.
+                          type: array
+                          items:
+                            type: string
+              example:
+                result:
+                  - basho: Hatsu
+                    month: 1
+                    month_name: January
+                    dates: [ '2024-01-14', '2024-01-15', '2024-01-16' ]
+                  - basho: Haru
+                    month: 3
+                    month_name: March
+                    dates: [ '2024-03-10', '2024-03-11', '2024-03-12' ]
+        400:
+          description: |
+            Bad request. \
+            The parameter `year` is either absent, not a valid year number,
+            or outside the allowed value range. \
+            See the message returned in the response data for details.
