@@ -11,8 +11,6 @@ info:
 servers:
   - url: https://python-webservice-demo.onrender.com
     description: "On Render (latest release)"
-  - url: https://python-webservice-demo-test.onrender.com
-    description: "On Render (test)"
 tags:
 - name: "SimpleText"
   description: "Operations that return a simple text message."
