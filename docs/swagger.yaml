@@ -5,7 +5,7 @@ info:
     A simple demonstration web service app with Python and Flask.<br/>
     Source code at GitHub: <https://github.com/cc-wong/python-webservice-demo>
     
-    Hosting this API documentation on GitHub Pages was made possible by
+    Hosting of this API documentation on GitHub Pages was made possible by
     [Peter Evan's guide at swagger-github-pages](https://github.com/peter-evans/swagger-github-pages).
   version: "1.2.1"
 servers:
@@ -13,8 +13,6 @@ servers:
     description: "On Render (latest release)"
   - url: https://python-webservice-demo-test.onrender.com
     description: "On Render (test)"
-  # - url: /
-  #   description: Local environment
 tags:
 - name: "SimpleText"
   description: "Operations that return a simple text message."
