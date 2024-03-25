@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - enhance_webapp
+      - github_api_page
 
 jobs:
   run-unittest-and-push-to-docker:
