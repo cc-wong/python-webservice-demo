@@ -35,7 +35,7 @@ def healthcheck():
     """
     Healthcheck endpoint.
     """
-    application.logger.info("Healthcheck triggered.")
+    application.logger.debug("Healthcheck triggered.")
     return "OK";
 
 days_of_week = { "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY" }
