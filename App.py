@@ -31,6 +31,14 @@ def personal_greeting(name):
 
     return f"Hello, {escape(name)}!";
 
+@application.route('/healthcheck')
+def healthcheck():
+    """
+    Healthcheck endpoint.
+    """
+    application.logger.info("Healthcheck triggered.")
+    return "OK";
+
 days_of_week = { "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY" }
 
 @application.route('/getWorkers', methods=["POST"])

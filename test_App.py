@@ -52,6 +52,22 @@ class TestWebApp(unittest.TestCase):
 
         message = response.get_data(as_text=True)
         assert message == f"Hello, {name}!"
+    
+    def test_healthcheck_getrequest(self):
+        """
+        Test case on a GET request to endpoint `/healthcheck`.
+        """
+        response = self.client.get('/healthcheck')
+        assert response.status_code == 200
+        message = response.get_data(as_text=True)
+        assert message == "OK"
+    
+    def test_healthcheck_headrequest(self):
+        """
+        Test case on a HEAD request to endpoint `/healthcheck`.
+        """
+        response = self.client.head('/healthcheck')
+        assert response.status_code == 200
 
     # Mock JSON data in test cases on `/getWorkers`.
     workers = {
