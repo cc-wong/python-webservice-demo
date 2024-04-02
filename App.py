@@ -10,7 +10,6 @@ from honbasho_calendar import HonbashoCalendar
 
 application = create_app()
 flask_api_doc(application, config_path='./api/doc/swagger.yaml', url_prefix='/api/doc', title='Python Web Service Demo | API doc')
-# CORS(application, origins={ 'http://localhost:5000', 'https://python-webservice-demo.onrender.com' })
 CORS(application)
 
 @application.route('/')
