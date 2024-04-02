@@ -18,6 +18,8 @@ tags:
   description: "Operations that perform calculations on values."
 - name: "GetData"
   description: "Operations that lookup/populate a set of data."
+- name: "Maintenance"
+  description: "Operations related to webservice maintenance."
 paths:
   /:
     get:
@@ -299,3 +301,26 @@ paths:
             The parameter `year` is either absent, not a valid year number,
             or outside the allowed value range. \
             See the message returned in the response data for details.
+  /healthcheck:
+    get:
+      tags:
+      - "Maintenance"
+      description: Endpoint for healthcheck.
+      responses:
+        200:
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: OK
+    head:
+      tags:
+      - "Maintenance"
+      description: |
+        Endpoint for healthcheck. May also be used as a keepalive service.\
+        \
+        Same as the `GET` request but skips the response body.
+      responses:
+        200:
+          description: OK
