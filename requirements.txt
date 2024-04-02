@@ -10,3 +10,4 @@ psycopg2-binary==2.9.6
 Werkzeug==2.3.6
 swagger-ui-py==23.9.23
 gunicorn==21.0.1
+python_dotenv==1.0.1
