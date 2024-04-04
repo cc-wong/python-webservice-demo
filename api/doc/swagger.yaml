@@ -196,7 +196,7 @@ paths:
                   description: |
                     The number of weeks to calculate. \
                     Use a negative number to calculate past dates.
-                  type: int
+                  type: integer
             examples:
               1 - Calculate future date:
                 value:
