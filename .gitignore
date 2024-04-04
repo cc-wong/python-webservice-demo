@@ -9,3 +9,7 @@
 # Python cache #
 ################
 __pycache__/
+
+# Local .env files #
+####################
+.env*.local
