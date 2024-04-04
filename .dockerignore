@@ -6,12 +6,15 @@
 
 **/.DS_Store
 **/__pycache__
+**/__tests__
+**/.pytest_cache
 **/.venv
 **/.classpath
 **/.dockerignore
 **/.env
 **/.git
 **/.gitignore
+**/.github
 **/.project
 **/.settings
 **/.toolstarget
@@ -31,5 +34,6 @@
 **/secrets.dev.yaml
 **/values.dev.yaml
 **/docs
+**/docker-python-kubernetes.yaml
 LICENSE
 README.md
