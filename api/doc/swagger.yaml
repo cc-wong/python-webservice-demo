@@ -239,19 +239,25 @@ paths:
       - "GetData"
       description: |
         Determines the schedule of the Ozumo Honbasho (Grand Sumo Tournament)
-        for a given year. \
-        \
+        for a given year.
+
         The tournaments are scheduled as follows:
         1. 6 (six) tournaments are held every year, in odd-number months.
         2. A tournament starts on the 2nd Sunday of a month and
           lasts for 15 (fifteen) consecutive days.
           Therefore the last day of a tournament will be on the 4th Sunday of the month.
+
+        _**NOTE:** This service was designed to estimate the schedule of future years.\
+        The dates returned for past years may or may not reflect the actual schedule,
+        eg. the March and May tournaments in 2020 were cancelled and/or postponed
+        but the schedule returned by this service will not reflect that._
       parameters:
         - in: query
           name: year
           description: |
             The year to determine the tournament schedule for. \
-            Must be between 2012 to 2100.
+            Must be between 2012 to `datetime.MAXYEAR`
+            (see [its definition in the Python documentation](https://docs.python.org/3/library/datetime.html#datetime.MAXYEAR)).
           schema:
             type: integer
           required: true

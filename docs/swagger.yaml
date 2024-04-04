@@ -7,7 +7,7 @@ info:
     
     Hosting of this API documentation on GitHub Pages was made possible by
     [Peter Evan's guide at swagger-github-pages](https://github.com/peter-evans/swagger-github-pages).
-  version: "1.2.1"
+  version: "1.4.0"
 servers:
   - url: https://python-webservice-demo.onrender.com
     description: "On Render (latest release)"
@@ -18,6 +18,8 @@ tags:
   description: "Operations that perform calculations on values."
 - name: "GetData"
   description: "Operations that lookup/populate a set of data."
+- name: "Maintenance"
+  description: "Operations related to webservice maintenance."
 paths:
   /:
     get:
@@ -237,19 +239,25 @@ paths:
       - "GetData"
       description: |
         Determines the schedule of the Ozumo Honbasho (Grand Sumo Tournament)
-        for a given year. \
-        \
+        for a given year.
+
         The tournaments are scheduled as follows:
         1. 6 (six) tournaments are held every year, in odd-number months.
         2. A tournament starts on the 2nd Sunday of a month and
           lasts for 15 (fifteen) consecutive days.
           Therefore the last day of a tournament will be on the 4th Sunday of the month.
+
+        _**NOTE:** This service was designed to estimate the schedule of future years.\
+        The dates returned for past years may or may not reflect the actual schedule,
+        eg. the March and May tournaments in 2020 were cancelled and/or postponed
+        but the schedule returned by this service will not reflect that._
       parameters:
         - in: query
           name: year
           description: |
             The year to determine the tournament schedule for. \
-            Must be between 2012 to 2100.
+            Must be between 2012 to `datetime.MAXYEAR`
+            (see [its definition in the Python documentation](https://docs.python.org/3/library/datetime.html#datetime.MAXYEAR)).
           schema:
             type: integer
           required: true
@@ -299,3 +307,26 @@ paths:
             The parameter `year` is either absent, not a valid year number,
             or outside the allowed value range. \
             See the message returned in the response data for details.
+  /healthcheck:
+    get:
+      tags:
+      - "Maintenance"
+      description: Endpoint for healthcheck.
+      responses:
+        200:
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: OK
+    head:
+      tags:
+      - "Maintenance"
+      description: |
+        Endpoint for healthcheck. May also be used as a keepalive service.\
+        \
+        Same as the `GET` request but skips the response body.
+      responses:
+        200:
+          description: OK

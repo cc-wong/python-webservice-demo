@@ -404,18 +404,19 @@ class TestWebApp(unittest.TestCase):
         
         self.run_get_honbasho_schedule(args={ "year": 2011 },
                                        expected_status_code=400,
-                                       expected_data="Request argument 'year' must be between 2012 and 2100!")
+                                       expected_data="Request argument 'year' cannot be before 2012!")
         mock_calculate.assert_not_called()
 
     @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
-    def test_get_honbasho_schedule_year_after_2100(self, mock_calculate):
+    def test_get_honbasho_schedule_exceed_max_year(self, mock_calculate):
         """
-        Test case on /getSumoHonbashoSchedule where the "year" is after 2100.
+        Test case on /getSumoHonbashoSchedule
+        where "year" is greater than the maximum allowed year value.
         """
         
-        self.run_get_honbasho_schedule(args={ "year": 2101 },
+        self.run_get_honbasho_schedule(args={ "year": 10000 },
                                         expected_status_code=400,
-                                        expected_data="Request argument 'year' must be between 2012 and 2100!")
+                                        expected_data="Request argument 'year' exceeded maximum allowed year value!")
         mock_calculate.assert_not_called()
 
     def run_get_honbasho_schedule(self, args={}, expected_status_code=200, expected_data={}):

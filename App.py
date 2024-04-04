@@ -4,7 +4,7 @@ from flask_cors import CORS
 from swagger_ui import flask_api_doc
 from markupsafe import escape
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, MAXYEAR
 from honbasho_calendar import HonbashoCalendar
 
 
@@ -117,6 +117,7 @@ def calculate_date():
         "result" : new_time.strftime(json_date_format)
     }
 
+honbasho_schedule_minyear = 2012
 @application.route('/getSumoHonbashoSchedule', methods=["GET"])
 def get_honbasho_schedule():
     """
@@ -133,8 +134,10 @@ def get_honbasho_schedule():
         year = int(request.args["year"])
     except ValueError:
         return "Request argument 'year' must be an integer!", 400
-    if not 2012 <= year <= 2100:
-        return "Request argument 'year' must be between 2012 and 2100!", 400
+    if year < honbasho_schedule_minyear:
+        return f'Request argument \'year\' cannot be before {honbasho_schedule_minyear}!', 400
+    if year > MAXYEAR:
+        return "Request argument 'year' exceeded maximum allowed year value!", 400
     schedule = HonbashoCalendar.calculate_schedule(year)
 
     result = []
