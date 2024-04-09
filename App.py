@@ -6,6 +6,7 @@ from markupsafe import escape
 import json
 from datetime import datetime, timedelta, MAXYEAR
 from honbasho_calendar import HonbashoCalendar
+import time
 
 
 application = create_app()
@@ -126,6 +127,8 @@ def get_honbasho_schedule():
     Requires an argument "year", which is an year number (integer).
     The year must be between 2012 and 2100, inclusive.
     """
+
+    time.sleep(70)
 
     if not "year" in request.args:
         return "'year' must be provided in the request arguments!", 400
