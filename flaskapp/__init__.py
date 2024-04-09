@@ -36,5 +36,6 @@ def create_app():
     })
     
     app = Flask(__name__)
+    app.logger.debug(os.environ)
     app.logger.debug(f'Configurations:-\nLog level: {log_level}\nLog format: {log_format}')
     return app
