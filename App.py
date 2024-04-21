@@ -63,7 +63,7 @@ def get_workers():
     if len(work_days) > 0:
         if not work_days.issubset(days_of_week): # "work_days" includes an invalid value
             application.logger.error(f"Invalid value(s) in work_days!\nRequest: {request.json}")
-            return "Invalid value for parameter work_days!", 400
+            return unsuccessful_response_json(400, "Invalid value for parameter work_days!")
         return {
             "workers" : [
                 worker for worker in worker_list["workers"] if work_days.issubset(worker["work_days"])
@@ -79,13 +79,13 @@ def multiply_by_two():
 
     if 'num' not in request.form:
         application.logger.error("'num' not present in request parameters.\n request.form: %s", request.form)
-        return "'num' not present in request parameters.", 400
+        return unsuccessful_response_json(400, "'num' not present in request parameters.")
     
     try:
         num = int(request.form['num'])
     except ValueError as e:
         application.logger.exception("Value error thrown.")
-        return "'num' must be an integer.", 400
+        return unsuccessful_response_json(400, "'num' must be an integer.")
     result = num * 2
     application.logger.info(f"result = {num} * 2 = {result}")
     return {
@@ -105,16 +105,16 @@ def calculate_date():
     try:
         orig_date = datetime.strptime(request.json["date"], json_date_format)
     except KeyError:
-        return "'date' is missing from request!", 400
+        return unsuccessful_response_json(400, "'date' is missing from request!")
     except ValueError:
-        return "'date' must be in YYYY-MM-DD format!", 400
+        return unsuccessful_response_json(400, "'date' must be in YYYY-MM-DD format!")
     
     try:
         num_of_weeks = request.json["weeks"]
     except KeyError:
-        return "'weeks' is missing from request!", 400
+        return unsuccessful_response_json(400, "'weeks' is missing from request!")
     if not isinstance(num_of_weeks, int):
-        return "'weeks' must be an integer!", 400
+        return unsuccessful_response_json(400, "'weeks' must be an integer!")
     time_delta = timedelta(weeks=num_of_weeks)
 
     new_time = orig_date + time_delta
@@ -135,16 +135,16 @@ def get_honbasho_schedule():
     simulate_delay("HONBASHO_SCHEDULE")
 
     if not "year" in request.args:
-        return "'year' must be provided in the request arguments!", 400
+        return unsuccessful_response_json(400, "'year' must be provided in the request arguments!")
     
     try:
         year = int(request.args["year"])
     except ValueError:
-        return "Request argument 'year' must be an integer!", 400
+        return unsuccessful_response_json(400, "Request argument 'year' must be an integer!")
     if year < honbasho_schedule_minyear:
-        return f'Request argument \'year\' cannot be before {honbasho_schedule_minyear}!', 400
+        return unsuccessful_response_json(400, f'Request argument \'year\' cannot be before {honbasho_schedule_minyear}!')
     if year > MAXYEAR:
-        return "Request argument 'year' exceeded maximum allowed year value!", 400
+        return unsuccessful_response_json(400, "Request argument 'year' exceeded maximum allowed year value!")
     schedule = HonbashoCalendar.calculate_schedule(year)
 
     result = []
@@ -159,6 +159,15 @@ def get_honbasho_schedule():
     return {
         "result" : result
     }
+
+def unsuccessful_response_json(status_code: int, message: str):
+    '''
+    Builds an unsuccessful response with a JSON response body.
+    '''
+    return {
+        "code" : status_code,
+        "message" : message
+    }, status_code
 
 def simulate_delay(key: str):
     '''

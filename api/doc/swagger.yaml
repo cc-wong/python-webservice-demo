@@ -138,8 +138,20 @@ paths:
                     work_days: [ FRIDAY ]
         400:
           description: |
-            Bad request. \
-            The request parameter `work_days` includes an invalid value.
+            Bad request. The request parameter `work_days` includes an invalid value.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    description: The HTTP status code
+                    type: integer
+                    example: 400
+                  message:
+                    description: The error message
+                    type: string
+                    example: "Invalid value for parameter work_days!"
   /timestwo:
     post:
       tags:
@@ -174,7 +186,20 @@ paths:
         400:
           description: |
             Bad request. `num` must exist in the request parameters and its value must be an integer. \
-            The response body will be the error message.
+            See the message returned in the response data for details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    description: The HTTP status code
+                    type: integer
+                    example: 400
+                  message:
+                    description: The error message
+                    type: string
+                    example: "'num' must be an integer."
   /calculateDate:
     post:
       tags:
@@ -230,9 +255,21 @@ paths:
                     example: "2024-08-05"
         400:
           description: | 
-            Bad request. \
-            It normally means that there is a problem in the request data.
+            Bad request. It normally means that there is a problem in the request data. \
             See the message in the response data for details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    description: The HTTP status code
+                    type: integer
+                    example: 400
+                  message:
+                    description: The error message
+                    type: string
+                    example: "'weeks' must be an integer!"
   /getSumoHonbashoSchedule:
     get:
       tags:
@@ -303,10 +340,22 @@ paths:
                     dates: [ '2024-03-10', '2024-03-11', '2024-03-12' ]
         400:
           description: |
-            Bad request. \
-            The parameter `year` is either absent, not a valid year number,
+            Bad request. The parameter `year` is either absent, not a valid year number,
             or outside the allowed value range. \
             See the message returned in the response data for details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    description: The HTTP status code
+                    type: integer
+                    example: 400
+                  message:
+                    description: The error message
+                    type: string
+                    example: "Request argument 'year' must be an integer!"
   /healthcheck:
     get:
       tags:

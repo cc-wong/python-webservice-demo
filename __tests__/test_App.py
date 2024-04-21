@@ -133,19 +133,20 @@ class TestWebApp(unittest.TestCase):
         """
 
         self.run_test_get_workers({ "work_days" : [ "MONDAY", "INVALID" ] },
-                                  400, "Invalid value for parameter work_days!")
+                                  400, 
+                                  self.get_expected_response_body(400,
+                                                                  error_message="Invalid value for parameter work_days!"))
 
     @patch("builtins.open", new_callable=mock_open, read_data=workers_json_text)
     def run_test_get_workers(self,
                              param_work_days,
-                             expected_status_code, expected_data,
+                             expected_status_code,
+                             expected_data,
                              mock_file):
         """
         Runs a test case on endpoint `/getWorkers`.
         """
-
         filename = "data/worker_list.json"
-
         response = self.client.post('/getWorkers', json=param_work_days)
         self.verify_endpoint_with_json_response_data(response, expected_status_code, expected_data)
 
@@ -156,45 +157,47 @@ class TestWebApp(unittest.TestCase):
         """
         Happy path test case on endpoint `/timestwo`.
         """
-
         response = self.client.post('/timestwo', data={"num" : 3})
         assert response.status_code == 200
-
-        expected = {
+        data = json.loads(response.get_data())
+        self.assertEqual({
             "num" : 3,
             "result" : 6
-        }
-        data = json.loads(response.get_data())
-        self.assertEqual(expected, data)
+        }, data)
 
     def test_multiply_by_two_noninteger_param(self):
         """
         Test case on endpoint: `/timestwo` where request parameter `num` is not an integer.
         """
-
         response = self.client.post('/timestwo', data={"num" : "not-a-number"})
         assert response.status_code == 400
-        assert response.data.decode('utf-8') == "'num' must be an integer."
+        data = json.loads(response.get_data())
+        self.assertEqual({
+                "code" : 400,
+                "message" : "'num' must be an integer."
+            }, data)
 
     def test_multiply_by_two_no_request_param(self):
         """
         Test case on endpoint `/timestwo` where request parameter `num` does not exist.
         """
-
         response = self.client.post('/timestwo', data={})
         assert response.status_code == 400
-        assert response.data.decode('utf-8') == "'num' not present in request parameters."
+        data = json.loads(response.get_data())
+        self.assertEqual({
+                "code" : 400,
+                "message" : "'num' not present in request parameters."
+            }, data)
 
     def test_calculate_date_future(self):
         """
         Test case on endpoint `/calculateDate` for calculating future date.
         """
-
         request_data = {
             "date" : "2024-05-27",
             "weeks" : 10
         }
-        self.run_test_calculate_date(request_data, 200, {
+        self.run_test_calculate_date(request_data, 200, expected_data={
             "result" : "2024-08-05"
         })
     
@@ -202,12 +205,11 @@ class TestWebApp(unittest.TestCase):
         """
         Test case on endpoint `/calculateDate` for calculating past date.
         """
-
         request_data = {
             "date" : "2024-03-24",
             "weeks" : -2
         }
-        self.run_test_calculate_date(request_data, 200, {
+        self.run_test_calculate_date(request_data, 200, expected_data={
             "result" : "2024-03-10"
         })
     
@@ -220,7 +222,7 @@ class TestWebApp(unittest.TestCase):
             "date" : "2024-05-27",
             "weeks" : 0
         }
-        self.run_test_calculate_date(request_data, 200, {
+        self.run_test_calculate_date(request_data, 200, expected_data={
             "result" : "2024-05-27"
         })
 
@@ -233,67 +235,67 @@ class TestWebApp(unittest.TestCase):
         request_data = {
             "weeks" : 10
         }
-        self.run_test_calculate_date(request_data, 400, "'date' is missing from request!")
+        self.run_test_calculate_date(request_data, 400, expected_error_message="'date' is missing from request!")
     
     def test_calculate_date_invalid_date_format(self):
         """
         Test case on endpoint `/calculateDate`
         where the format of `date` in the request data is invalid.
         """
-
         request_data = {
             "date" : "2024/666/21",
             "weeks" : 10
         }
-        self.run_test_calculate_date(request_data, 400, "'date' must be in YYYY-MM-DD format!")
+        self.run_test_calculate_date(request_data, 400, expected_error_message="'date' must be in YYYY-MM-DD format!")
 
     def test_calculate_date_missing_weeks(self):
         """
         Test case on endpoint `/calculateDate`
         where `weeks` is missing from the request data.
         """
-
         request_data = {
             "date" : "2024-05-27"
         }
-        self.run_test_calculate_date(request_data, 400, "'weeks' is missing from request!")
+        self.run_test_calculate_date(request_data, 400, expected_error_message="'weeks' is missing from request!")
 
     def test_calculate_date_weeks_is_not_integer(self):
         """
         Test case on endpoint `/calculateDate` where `weeks` is not an integer.
         """
-
         request_data = {
             "date" : "2024-05-27",
             "weeks" : 10.7
         }
-        self.run_test_calculate_date(request_data, 400, "'weeks' must be an integer!")
+        self.run_test_calculate_date(request_data, 400, expected_error_message="'weeks' must be an integer!")
 
     def test_calculate_date_weeks_is_not_numeric(self):
         """
         Test case on endpoint `/calculateDate` where `weeks` is not numeric.
         """
-
         request_data = {
             "date" : "2024-05-27",
             "weeks" : "asdf10"
         }
-        self.run_test_calculate_date(request_data, 400, "'weeks' must be an integer!")
+        self.run_test_calculate_date(request_data, 400, expected_error_message="'weeks' must be an integer!")
 
-    def run_test_calculate_date(self, request_data, expected_status_code, expected_data):
+    def run_test_calculate_date(self, request_data,
+                                expected_status_code,
+                                expected_error_message=None,
+                                expected_data={}):
         """
         Runs a test case on endpoint `/calculateDate`.
         """
-
         response = self.client.post('/calculateDate', json=request_data)
-        self.verify_endpoint_with_json_response_data(response, expected_status_code, expected_data)
+        self.verify_endpoint_with_json_response_data(response, expected_status_code,
+                                                     self.get_expected_response_body(expected_status_code,
+                                                                                     expected_error_message,
+                                                                                     expected_data))
 
     @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
     def test_get_honbasho_schedule(self, mock_calculate):
         """
         Normal test case on endpoint /getSumoHonbashoSchedule.
         """
-
         year = 2020
         mock_schedule = [
             {
@@ -380,9 +382,8 @@ class TestWebApp(unittest.TestCase):
         """
         Test case on /getSumoHonbashoSchedule where the argument "year" is not provided.
         """
-
         self.run_get_honbasho_schedule(expected_status_code=400,
-                                       expected_data="'year' must be provided in the request arguments!")
+                                       expected_error_message="'year' must be provided in the request arguments!")
         mock_calculate.assert_not_called()
 
     @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
@@ -390,10 +391,9 @@ class TestWebApp(unittest.TestCase):
         """
         Test case on /getSumoHonbashoSchedule where the value of argument "year" is not an integer.
         """
-        
         self.run_get_honbasho_schedule(args={ "year": 20027.7 },
                                        expected_status_code=400,
-                                       expected_data="Request argument 'year' must be an integer!")
+                                       expected_error_message="Request argument 'year' must be an integer!")
         mock_calculate.assert_not_called()
 
     @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
@@ -401,10 +401,9 @@ class TestWebApp(unittest.TestCase):
         """
         Test case on /getSumoHonbashoSchedule where the "year" is before 2012.
         """
-        
         self.run_get_honbasho_schedule(args={ "year": 2011 },
                                        expected_status_code=400,
-                                       expected_data="Request argument 'year' cannot be before 2012!")
+                                       expected_error_message="Request argument 'year' cannot be before 2012!")
         mock_calculate.assert_not_called()
 
     @patch('honbasho_calendar.HonbashoCalendar.calculate_schedule')
@@ -413,30 +412,42 @@ class TestWebApp(unittest.TestCase):
         Test case on /getSumoHonbashoSchedule
         where "year" is greater than the maximum allowed year value.
         """
-        
         self.run_get_honbasho_schedule(args={ "year": 10000 },
                                         expected_status_code=400,
-                                        expected_data="Request argument 'year' exceeded maximum allowed year value!")
+                                        expected_error_message="Request argument 'year' exceeded maximum allowed year value!")
         mock_calculate.assert_not_called()
 
-    def run_get_honbasho_schedule(self, args={}, expected_status_code=200, expected_data={}):
+    def run_get_honbasho_schedule(self, args={},
+                                  expected_status_code=200, expected_error_message=None,
+                                  expected_data={}):
         """
         Runs a test case on endpoint /getSumoHonbashoSchedule.
         """
-
         response = self.client.get('/getSumoHonbashoSchedule', query_string=args)
-        self.verify_endpoint_with_json_response_data(response, expected_status_code, expected_data)
-
+        self.verify_endpoint_with_json_response_data(response, expected_status_code,
+                                                     self.get_expected_response_body(expected_status_code,
+                                                                                     expected_error_message,
+                                                                                     expected_data))
+    
+    def get_expected_response_body(self, status_code, error_message=None, data={}):
+        '''
+        Builds the expected response body for an endpoint that returns JSON response body
+        for all status codes.\n
+        If an error message is provided, build a JSON object with `code` as the status code
+        and `message` as the provided message.
+        '''
+        if error_message == None:
+            return data
+        else:
+            return {
+                "code" : status_code,
+                "message" : error_message
+            }
 
     def verify_endpoint_with_json_response_data(self, response, expected_status_code, expected_data):
         """
         Verifies an endpoint where the normal response data is JSON.
         """
-
         assert response.status_code == expected_status_code
-
-        if expected_status_code == 200:
-            data = json.loads(response.get_data())
-            self.assertEqual(expected_data, data)
-        else:
-            assert response.data.decode('utf-8') == expected_data
+        data = json.loads(response.get_data())
+        self.assertEqual(expected_data, data)
