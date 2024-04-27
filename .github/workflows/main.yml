@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - version-**
 
 jobs:
   run-unittest-and-push-to-docker:
