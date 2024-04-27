@@ -1,0 +1,16 @@
+name: Test tagging
+
+on:
+  push:
+    tags:
+      - test-**
+
+jobs:
+  run-unittest-and-push-to-docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Get and print tag name
+        env:
+            TAG_NAME: ${{ github.ref_name }}
+        run: echo "Branch/Tag name = ${{ github.ref_name }}"
