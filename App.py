@@ -58,11 +58,10 @@ def get_workers():
         worker_list = json.load(data_file)
 
     work_days = set([] if "work_days" not in request.json else request.json["work_days"])
-    application.logger.debug(f"Request param work_days: {work_days}")
-    application.logger.debug(request.json)
+    application.logger.debug(f"[get_workers] Request param work_days: {work_days}.\nRequest data: {request.json}")
     if len(work_days) > 0:
         if not work_days.issubset(days_of_week): # "work_days" includes an invalid value
-            application.logger.error(f"Invalid value(s) in work_days!\nRequest: {request.json}")
+            application.logger.error(f"[get_workers] Invalid value(s) in work_days!")
             return unsuccessful_response_json(400, "Invalid value for parameter work_days!")
         return {
             "workers" : [
@@ -78,16 +77,16 @@ def multiply_by_two():
     """
 
     if 'num' not in request.form:
-        application.logger.error("'num' not present in request parameters.\n request.form: %s", request.form)
+        application.logger.error("[multiply_by_two] 'num' not present in request parameters.")
         return unsuccessful_response_json(400, "'num' not present in request parameters.")
     
     try:
         num = int(request.form['num'])
     except ValueError as e:
-        application.logger.exception("Value error thrown.")
+        application.logger.error(f'[multiply_by_two] Invalid value for parameter "num": {e}')
         return unsuccessful_response_json(400, "'num' must be an integer.")
     result = num * 2
-    application.logger.info(f"result = {num} * 2 = {result}")
+    application.logger.info(f"[multiply_by_two] result = {num} * 2 = {result}")
     return {
         "num" : num,
         "result" : result
@@ -118,6 +117,7 @@ def calculate_date():
     time_delta = timedelta(weeks=num_of_weeks)
 
     new_time = orig_date + time_delta
+    application.logger.debug(f'[calculate_date] orig_date: {orig_date}, new_time: {new_time}\n(time_delta: {time_delta}))')
     return {
         "result" : new_time.strftime(json_date_format)
     }
@@ -139,11 +139,14 @@ def get_honbasho_schedule():
     
     try:
         year = int(request.args["year"])
-    except ValueError:
+    except ValueError as e:
+        application.logger.error(f'[get_honbasho_schedule] Invalid value for parameter "year".\nMessage: {e}')
         return unsuccessful_response_json(400, "Request argument 'year' must be an integer!")
     if year < honbasho_schedule_minyear:
+        application.logger.error(f'[get_honbasho_schedule] Invalid value for parameter "year": {year} < honbasho_schedule_minyear')
         return unsuccessful_response_json(400, f'Request argument \'year\' cannot be before {honbasho_schedule_minyear}!')
     if year > MAXYEAR:
+        application.logger.error(f'[get_honbasho_schedule] Invalid value for parameter "year": {year} > MAXYEAR')
         return unsuccessful_response_json(400, "Request argument 'year' exceeded maximum allowed year value!")
     schedule = HonbashoCalendar.calculate_schedule(year)
 

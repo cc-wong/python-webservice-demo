@@ -54,11 +54,11 @@ class HonbashoCalendar():
 
         schedule = []
         for basho in HonbashoCalendar.Basho:
-            logging.debug(f"Month: {basho.get_month_name()}")
             schedule.append({
                 "basho" : basho,
                 "dates" : HonbashoCalendar.get_dates(year, basho)
             })
+        logging.debug(f"Schedule for year {year}:\n{schedule}")
         return schedule
     
     def get_dates(year: int, basho: Basho) -> list:
