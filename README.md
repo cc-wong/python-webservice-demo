@@ -66,9 +66,9 @@ Curl command for verification: `curl http://localhost:30001/`
 > [!NOTE]
 > The commands below are run at the root directory of this project unless otherwise stated.
 
-Summary-level coverage report to the console:
+Summary-level coverage report to the console/terminal, including missed line numbers:
 ```
-pytest --cov
+pytest --cov-report term-missing --cov
 ```
 To generate a detailed HTML coverage report (output at directory `htmlcov/`):
 ```
