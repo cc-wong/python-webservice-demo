@@ -6,16 +6,11 @@ from markupsafe import escape
 import json
 from datetime import datetime, timedelta, MAXYEAR
 from honbasho_calendar import HonbashoCalendar
-import time
-import os
+from devtest_helper import DevtestHelper
 
 application = create_app()
 flask_api_doc(application, config_path='./api/doc/swagger.yaml', url_prefix='/api/doc', title='Python Web Service Demo | API doc')
 CORS(application)
-
-mock_delay_times = {
-    'HONBASHO_SCHEDULE':  int(os.environ.get('SIM_DELAY_HONBASHO_SCHEDULE', 0))
-}
 
 @application.route('/')
 def hello_world():
@@ -132,7 +127,7 @@ def get_honbasho_schedule():
     The year must be between 2012 and 2100, inclusive.
     """
 
-    simulate_delay("HONBASHO_SCHEDULE")
+    DevtestHelper.simulate_delay("HONBASHO_SCHEDULE")
 
     if not "year" in request.args:
         return unsuccessful_response_json(400, "'year' must be provided in the request arguments!")
@@ -171,21 +166,6 @@ def unsuccessful_response_json(status_code: int, message: str):
         "code" : status_code,
         "message" : message
     }, status_code
-
-def simulate_delay(key: str):
-    '''
-    WARNING: To be used in development environments only!
-
-    Simulates a delayed webservice response for the time (in seconds) configured by
-    environment variable `SIM_DELAY_<key>`.
-
-    Simulation is performed only if the delay time is configured.
-    '''
-    mock_delay_time = mock_delay_times[key]
-    if mock_delay_time > 0:
-        application.logger.info(f'Simulating delay: {mock_delay_time} second(s) [{key}]')
-        time.sleep(mock_delay_time)
-        application.logger.info(f'Delay simulation end [{key}]')
 
 if __name__ == "__main__":
     application.run(debug=True)
