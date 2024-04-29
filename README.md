@@ -48,7 +48,6 @@ Curl command for verification: `curl http://localhost:30001/`
 
 ## Developers' notes
 ### URLs for local development/testing
-
 | Name | URL |
 | ---: | :--- |
 | Webservice base URL | <http://localhost:5000/> |
@@ -58,3 +57,26 @@ Curl command for verification: `curl http://localhost:30001/`
 1. Go to the root directory of this project in the terminal.
 2. Run the command: `pytest`
    - To populate application logs to the console, use `pytest -o log_cli=true`
+
+#### Coverage report
+> [!IMPORTANT]
+> The pytest-cov plugin is required.\
+> For details and installation instructions, see: <https://pypi.org/project/pytest-cov/>
+
+> [!NOTE]
+> The commands below are run at the root directory of this project unless otherwise stated.
+
+Summary-level coverage report to the console:
+```
+pytest --cov
+```
+To generate a detailed HTML coverage report (output at directory `htmlcov/`):
+```
+pytest --cov --cov-report=html
+```
+pytest's help command includes options of coverage reporting after the plugin is installed:
+```
+pytest --help
+```
+A usage guide for the plugin is also available at:
+https://pytest-cov.readthedocs.io/en/latest/reporting.html
