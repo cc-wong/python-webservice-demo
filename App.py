@@ -20,7 +20,7 @@ def hello_world():
 
     return '<h1>Hello World!</h1>'
 
-@application.route('/<name>')
+@application.route('/greeting/<name>')
 def personal_greeting(name):
     """
     Prints a personalized greeting.

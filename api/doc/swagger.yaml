@@ -34,11 +34,11 @@ paths:
               schema:
                 type: string
                 example: <h1>Hello World!</h1>
-  /{name}:
+  /greeting/{name}:
     get:
       tags:
       - "SimpleText"
-      description: Prints a personalized greeting with the name provided by <name>.
+      description: Prints a personalized greeting with the name provided by `{name}`.
       parameters:
         - name: name
           in: path

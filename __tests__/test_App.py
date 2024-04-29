@@ -40,19 +40,35 @@ class TestWebApp(unittest.TestCase):
         message = response.get_data(as_text=True)
         assert message == "<h1>Hello World!</h1>"
 
-    def test_personal_greeting(self):
+    def test_personal_greeting_name_provided(self):
         """
-        Test case on endpoint `/<name>`.
+        Test case on endpoint `/greeting/<name>`.
         """
 
         name = "Lulu"
 
-        response = self.client.get(f'/{name}')
+        response = self.client.get(f'/greeting/{name}')
         assert response.status_code == 200
 
         message = response.get_data(as_text=True)
         assert message == f"Hello, {name}!"
+
+    def test_personal_greeting_no_name_provided(self):
+        """
+        Test case on endpoint `/greeting` (no name provided).
+        """
+
+        response = self.client.get('/greeting')
+        assert response.status_code == 404
     
+    def test_personal_greeting_url_no_keyword(self):
+        """
+        Test case on endpoint `/{name}` (`/greeting` is missing in URL).
+        """
+
+        response = self.client.get('/lulu')
+        assert response.status_code == 404
+
     def test_healthcheck_getrequest(self):
         """
         Test case on a GET request to endpoint `/healthcheck`.
