@@ -81,7 +81,7 @@ def multiply_by_two():
         application.logger.error(f'[multiply_by_two] Invalid value for parameter "num": {e}')
         return unsuccessful_response_json(400, "'num' must be an integer.")
     result = num * 2
-    application.logger.info(f"[multiply_by_two] result = {num} * 2 = {result}")
+    application.logger.debug(f"[multiply_by_two] result = {num} * 2 = {result}")
     return {
         "num" : num,
         "result" : result
