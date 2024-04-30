@@ -49,8 +49,8 @@ jobs:
         run: |
           curl "$deploy_url"
   create-docker-image:
-    # Only for app version tags.
-    if: ${{ startsWith(github.ref_name, 'version-') }}
+    # Only for master branch or app version tags.
+    if: ${{ github.ref_name == 'master' || startsWith(github.ref_name, 'version-') }}
     needs: run-unit-tests
     runs-on: ubuntu-latest
     steps:
@@ -69,7 +69,8 @@ jobs:
       -
         name: Build and push Docker image
         env:
-          TAG_NAME: ${{ github.ref_name }}
+          # Tag name is "latest" for master branch, the Git tag name otherwise.
+          TAG_NAME: ${{ github.ref_name == 'master' && 'latest' || github.ref_name }}
         uses: docker/build-push-action@v5
         with:
           context: .
