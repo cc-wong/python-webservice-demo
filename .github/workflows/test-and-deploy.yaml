@@ -1,14 +1,19 @@
-name: Docker CI/CD
+name: Run Tests and Deploy
 
 on:
   push:
     branches:
       - master
+      - next-version
     tags:
       - version-**
 
 jobs:
-  run-unittest-and-push-to-docker:
+  print-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Branch/Tag name = ${{ github.ref_name }}"
+  run-unit-tests:
     runs-on: ubuntu-latest
     steps:
       -
@@ -28,6 +33,30 @@ jobs:
       -
         name: Run unit tests
         run: python -m pytest
+  deploy-to-server:
+    # Only for master.
+    if: github.ref_name == 'master'
+    needs: run-unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Deploy to Render
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
+  create-docker-image:
+    # Only for app version tags.
+    if: ${{ startsWith(github.ref_name, 'version-') }}
+    needs: run-unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
       -
         name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -38,12 +67,8 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
-        name: Print branch name
-        run: echo "Branch name = ${{ github.ref_name }}"
-      -
-        name: Build and push
+        name: Build and push Docker image
         env:
-          # Tag name == Branch name
           TAG_NAME: ${{ github.ref_name }}
         uses: docker/build-push-action@v5
         with:
